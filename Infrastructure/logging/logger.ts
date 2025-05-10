@@ -1,6 +1,6 @@
 import winston from 'winston';
 
-const logger = winston.createLogger({
+const logger = winston.createLogger({//TO DO: Add label to Log in a loggerCreator
   level: 'info',
   format: winston.format.combine(
     winston.format.timestamp(),

@@ -7,7 +7,7 @@ export interface IMessage extends Document {
   status: string;
 }
 
-const MessageSchema = new Schema<IMessage>({
+const MessageSchema = new Schema<IMessage>({//TO DO: redo models
   from: { type: String, required: true },
   body: { type: String, required: true },
   timestamp: { type: Date, required: true },
