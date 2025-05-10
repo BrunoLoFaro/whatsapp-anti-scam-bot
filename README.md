@@ -103,4 +103,5 @@ Cualquier duda, consulten!
 
 Arquitectura
 
-![image](https://github.com/user-attachments/assets/174ab53e-dcef-461d-86b0-3610a5d82ca6)
+![image](https://github.com/user-attachments/assets/d1b24876-5ca3-4712-b28b-bc18117a563b)
+
