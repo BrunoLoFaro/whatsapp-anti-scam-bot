@@ -1,4 +1,5 @@
 import axios from 'axios';
+import logger from '../../Infrastructure/logging/logger.js';
 
 export async function sendReply(to: string, text: string): Promise<void> {
   try {
@@ -17,6 +18,6 @@ export async function sendReply(to: string, text: string): Promise<void> {
       }
     );
   } catch (err) {
-    console.error('Error sending WhatsApp reply:', err);
+    logger.info('Error sending WhatsApp reply:', err);
   }
 }
