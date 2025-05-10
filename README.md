@@ -1,1 +1,1 @@
-# asistente-estafas-whatsapp
+# whatsapp-anti-scam-bot
