@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "pwa-node",
+        "request": "launch",
+        "name": "Debug TypeScript with ts-node",
+        "runtimeArgs": ["--require", "ts-node/register"],
+        "program": "${workspaceFolder}/server.ts",
+        "cwd": "${workspaceFolder}",
+        "skipFiles": ["<node_internals>/**"],
+        "envFile": "${workspaceFolder}/.env"
+      }
+    ]
+  }
+  

@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "outDir": "dist",
+    "rootDir": "./",
+    "esModuleInterop": true,
+    "moduleDetection": "force",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true
+  },
+  "include": ["API", "Application", "Domain", "Infrastructure", "server.ts"],
+  "exclude": ["node_modules", "dist"]
+}
