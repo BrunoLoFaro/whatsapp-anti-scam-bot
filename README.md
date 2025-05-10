@@ -100,3 +100,7 @@ Al terminar, crear un **Pull Request a `develop`**. Pidanme una codereview para 
 ---
 
 Cualquier duda, consulten!
+
+Arquitectura
+
+![image](https://github.com/user-attachments/assets/174ab53e-dcef-461d-86b0-3610a5d82ca6)
