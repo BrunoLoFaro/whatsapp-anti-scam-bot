@@ -1,11 +1,34 @@
 import axios from 'axios';
-import logger from '../../Infrastructure/logging/logger.js';
 
-export async function sendReply(to: string, text: string): Promise<void> {
+import { wppAPIToken } from '../../config.js'
+
+export default async function sendReplyToWpp(ownPhoneNumberID: string, message: string, userPhoneNumber: string ){
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `${wppAPIToken}`
+    }
+  }
+
+  const data = {
+    "messaging_product": "whatsapp",
+    "recipient_type": "individual",
+    "to": `${userPhoneNumber}`,
+    "type": "text",
+    "text": {
+      "preview_url": true,
+      "body": `${message}`
+    }
+  }
+
+  const url = `https://graph.facebook.com/${ownPhoneNumberID}/messages`
+
   try {
-/*    await axios.post(//TODO integrate with meta API
-    );*/
+    const response = await axios.post(url, data, options);
+      return response
   } catch (err) {
-    logger.info('Error sending WhatsApp reply:', err);
+      console.error(err);
+      return null;
   }
 }
