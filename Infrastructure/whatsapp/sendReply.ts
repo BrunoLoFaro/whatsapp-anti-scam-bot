@@ -22,7 +22,7 @@ export default async function sendReplyToWpp(message: string, userPhoneNumber: s
     }
   }
 
-  const url = `https://graph.facebook.com/${ownNumberID}/messages`;
+  const url = `https://graph.facebook.com/v22.0/${ownNumberID}/messages`;
 
   try {
     const response = await axios.post(url, data, options);
