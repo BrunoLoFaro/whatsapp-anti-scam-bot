@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-import { wppAPIToken } from '../../config.js'
+import { wppAPIToken, ownNumberID } from '../../config.js'
 
-export default async function sendReplyToWpp(ownPhoneNumberID: string, message: string, userPhoneNumber: string ){
+export default async function sendReplyToWpp(message: string, userPhoneNumber: string ){
   const options = {
     method: 'POST',
     headers: {
@@ -22,11 +22,11 @@ export default async function sendReplyToWpp(ownPhoneNumberID: string, message: 
     }
   }
 
-  const url = `https://graph.facebook.com/${ownPhoneNumberID}/messages`
+  const url = `https://graph.facebook.com/${ownNumberID}/messages`;
 
   try {
     const response = await axios.post(url, data, options);
-      return response
+      return response;
   } catch (err) {
       console.error(err);
       return null;
