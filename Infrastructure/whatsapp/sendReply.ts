@@ -1,6 +1,14 @@
+/**
+ * WhatsApp Business API messaging rule:
+ * Businesses can only initiate conversations with template messages.
+ * After user replies, you can send other message types (text, media, etc)
+ * within a 24-hour window.
+ * Ref: https://developers.facebook.com/community/threads/651506520396074/
+ */
+
 import axios from 'axios';
 
-import { wppAPIToken, ownNumberID } from '../../config.js'
+import { wppAPIToken, ownNumberID } from '../../config'
 
 interface apiResponse {
   success: boolean,
@@ -8,7 +16,7 @@ interface apiResponse {
   error?: any
 }
 
-export default async function sendReplyToWpp(message: string, userPhoneNumber: number ): Promise<apiResponse> {
+export default async function sendReplyToWpp(message: string, userPhoneNumber: string ): Promise<apiResponse> {
   const options = {
     method: 'POST',
     headers: {
