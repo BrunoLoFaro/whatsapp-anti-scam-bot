@@ -5,7 +5,7 @@ dotenv.config({ path: '.env' });
 interface config {
     webPort: number,
     wppwppAPIToken: string,
-    ownNumberID: number
+    ownNumberID: string
 };
 
 export const webPort = process.env.PORT;
