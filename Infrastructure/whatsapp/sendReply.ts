@@ -7,13 +7,40 @@
  */
 
 import axios from 'axios';
+import logger from '../logging/logger';
 
-import { wppAPIToken, ownNumberID } from '../../config'
+import config from '../../config';
+
 
 interface apiResponse {
   success: boolean,
-  data?: any,
-  error?: any
+  data?: dataResponse,
+  error?: errorResponse
+}
+
+interface errorResponse {
+  error: {
+    message: string,
+    type: string,
+    code: number,
+    error_subcode: number,
+    fbtrace_id: string
+  }
+}
+
+interface dataResponse {
+  messaging_product: string,
+  contacts: [
+    {
+      input: string,
+      wa_id: string
+    }
+  ],
+  messages: [
+    {
+      id: string
+    }
+  ]
 }
 
 export default async function sendReplyToWpp(message: string, userPhoneNumber: string ): Promise<apiResponse> {
@@ -21,7 +48,7 @@ export default async function sendReplyToWpp(message: string, userPhoneNumber: s
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `${wppAPIToken}`
+      'Authorization': `${config.wppAPIToken}`
     }
   }
 
@@ -36,15 +63,20 @@ export default async function sendReplyToWpp(message: string, userPhoneNumber: s
     }
   }
 
-  const url = `https://graph.facebook.com/v22.0/${ownNumberID}/messages`;
+  const url = `${config.baseUrl}/v22.0/${config.ownNumberID}/messages`;
 
   try {
-    const response = await axios.post(url, data, options);
+    logger.info(`Sending a message to Meta API, for the number ${userPhoneNumber}...`);
+
+    const response: dataResponse = await axios.post(url, data, options);
+    logger.info(`Succesfully sent a message to Meta API, for the number ${userPhoneNumber}`);
       return {
         success: true,
         data: response
       };
-  } catch (err) {
+  } catch (err: any) {
+      logger.error(`Error occurred while trying to send a message to Meta API, for the number ${userPhoneNumber}`);
+      logger.error ('Error Info:' + err);
       console.error(err);
       return {
         success: false,
