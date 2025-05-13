@@ -2,7 +2,13 @@ import axios from 'axios';
 
 import { wppAPIToken, ownNumberID } from '../../config.js'
 
-export default async function sendReplyToWpp(message: string, userPhoneNumber: string ){
+interface apiResponse {
+  success: boolean,
+  data?: any,
+  error?: any
+}
+
+export default async function sendReplyToWpp(message: string, userPhoneNumber: number ): Promise<apiResponse> {
   const options = {
     method: 'POST',
     headers: {
@@ -26,9 +32,15 @@ export default async function sendReplyToWpp(message: string, userPhoneNumber: s
 
   try {
     const response = await axios.post(url, data, options);
-      return response;
+      return {
+        success: true,
+        data: response
+      };
   } catch (err) {
       console.error(err);
-      return null;
+      return {
+        success: false,
+        error: err
+      };
   }
 }
