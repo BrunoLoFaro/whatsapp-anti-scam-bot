@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { describe, test, jest, beforeEach, afterEach, expect } from '@jest/globals'
+import { describe, test, jest, afterEach, expect } from '@jest/globals'
 
 import sendReplyToWpp from '../Infrastructure/whatsapp/sendReply';
 
@@ -10,7 +10,7 @@ jest.mock('../config.ts', () => ({
     ownNumberID: '123456789'
 }));
 
-import { wppAPIToken, ownNumberID } from '../config';
+import config from '../config';
 
 describe('Probando Respuesta a la API de WhatsApp', () => {
 
@@ -34,7 +34,7 @@ describe('Probando Respuesta a la API de WhatsApp', () => {
         const response = await sendReplyToWpp('test', "0011223344");
         
         //verificacion de argumentos correctos
-        expect(mockedAxios.post).toBeCalledWith(`https://graph.facebook.com/v22.0/${ownNumberID}/messages`,
+        expect(mockedAxios.post).toBeCalledWith(`${config.baseUrl}/v22.0/${config.ownNumberID}/messages`,
         {
             "messaging_product": "whatsapp",
             "recipient_type": "individual",
@@ -49,7 +49,7 @@ describe('Probando Respuesta a la API de WhatsApp', () => {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `${wppAPIToken}`
+            'Authorization': `${config.wppAPIToken}`
         }
         });
 
@@ -65,6 +65,11 @@ describe('Probando Respuesta a la API de WhatsApp', () => {
     const mockData = {
         success: false,
         error: {
+            "message": "Unsupported post request. Example",
+            "type": "GraphMethodException Example",
+            "code": 100111,
+            "error_subcode": 3311,
+            "fbtrace_id": "AB8v5praKdgF2bWXoyU_diL123123123123"
         }
     }
     
