@@ -87,8 +87,8 @@ router.post('/api/webhook', function(req, res) {
         res.status(401).send();
     }
     
-    const message = entry[0].changes[0].value.messages[0] ? entry[0].changes[0].value.messages[0] : null;
-    const status = entry[0].changes[0].value.statuses[0] ?  entry[0].changes[0].value.statuses[0] : null;
+    const message = entry[0].changes[0].value.messages ? entry[0].changes[0].value.messages[0] : null;
+    const status = entry[0].changes[0].value.statuses ?  entry[0].changes[0].value.statuses[0] : null;
 
     if (message){
         res.status(200).send();
