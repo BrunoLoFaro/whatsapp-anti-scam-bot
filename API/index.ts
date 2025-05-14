@@ -1,7 +1,17 @@
-import { Router } from 'express';
-import webhookRoutes from './routes/webhookRoutes.js';
+import config from '../config';
+import express from 'express';
+import whatsAppWebHookRoute from './routes/webhook.route';
+import logger from '../Infrastructure/logging/logger.js';
 
-const router = Router();
-router.use('/webhook', webhookRoutes);
+const app = express();
 
-export default router;
+//Middleware
+app.use(express.json());
+
+//Routes
+app.use(whatsAppWebHookRoute);
+
+export default function startAPIServer(): void {
+    const PORT = config.webPort || 3000;
+    app.listen(PORT, () => logger.info(`Server running on port ${PORT}`));
+}
