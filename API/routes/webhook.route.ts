@@ -2,6 +2,7 @@ import { Router } from 'express';
 import config from '../../config.js';
 
 import handleIncomingMessage from '../handlers/messageReceivedHandler.js';
+import { stat } from 'fs';
 
 const router = Router();
 
@@ -87,11 +88,16 @@ router.post('/api/webhook', function(req, res) {
     }
     
     const message = entry[0].changes[0].value.messages[0] ? entry[0].changes[0].value.messages[0] : null;
-    console.log(message);
+    const status = entry[0].changes[0].value.statuses[0] ?  entry[0].changes[0].value.statuses[0] : null;
 
     if (message){
         res.status(200).send();
         handleIncomingMessage(message);
+    }
+
+    if (status){
+        res.status(200).send();
+        //handleIncomingStatus
     }
 
     res.status(401).send();
