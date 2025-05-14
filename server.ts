@@ -1,8 +1,18 @@
 import dotenv from 'dotenv';
+import express from 'express';
 import connectToMongo from './Infrastructure/database/mongo.js';
+
 import logger from './Infrastructure/logging/logger.js';
 import config from './config.js'
-import startAPIServer from './API/index';
+import whatsAppWebHookRoute from './API/routes/webhook.route.js';
+
+const apiServer = express();
+
+//Middleware
+apiServer.use(express.json());
+
+//Routes
+apiServer.use(whatsAppWebHookRoute);
 
 dotenv.config();
 
@@ -18,4 +28,6 @@ configPropiedades.forEach(propiedad => {
 
 await connectToMongo();
 
-startAPIServer();
+apiServer.listen(config.webPort, function() {
+    logger.info(`API Server listening on Port ${config.webPort} ...`);
+});
