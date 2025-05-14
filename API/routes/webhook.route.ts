@@ -1,12 +1,51 @@
 import { Router } from 'express';
 import config from '../../config.js';
 
+import handleIncomingMessage from '../handlers/messageReceivedHandler.js';
+
 const router = Router();
 
-interface urlQuery {
+interface IurlQuery {
     'hub.mode': string,
     'hub.challenge': number,
     'hub.verify_token': string
+}
+
+interface IWhatsAppWebhook {
+  entry: [{
+    id: string; // "0"
+    changes: Array<{
+      field: "messages"; // Siempre "messages" en este contexto
+      value: {
+        messaging_product: "whatsapp"; // Siempre "whatsapp"
+        metadata: {
+          display_phone_number: string; // Ej: "16505551111"
+          phone_number_id: string; // ID de número de teléfono de negocio (Ej: "123456123")
+        };
+        contacts: Array<{
+          profile: {
+            name: string; // Nombre del usuario (Ej: "test user name")
+          };
+          wa_id: string; // Número de WhatsApp del usuario (Ej: "16315551181")
+        }>;
+        messages: Array<{
+          from: string; // Número remitente (debe coincidir con wa_id)
+          id: string; // ID único del mensaje (Ej: "ABGGFlA5Fpa")
+          timestamp: string; // Unix timestamp (Ej: "1504902988")
+          type: "text"; // Puede ser también "image", "audio", etc.
+          text?: {
+            body: string; // Contenido del mensaje (Ej: "this is a text message")
+          };
+          // Otros tipos de mensaje (opcional):
+          image?: {
+            id: string;
+            caption?: string;
+          };
+          // ... otros tipos (audio, document, etc.)
+        }>;
+      };
+    }>;
+  }];
 }
 
 router.get('/api/webhook', function(req, res) {
@@ -17,7 +56,7 @@ router.get('/api/webhook', function(req, res) {
         hub.verify_token=meatyhamhock
     } */
 
-    const query = req.query as unknown as urlQuery;
+    const query = req.query as unknown as IurlQuery;
     const mode: string = query['hub.mode'];
     const challenge: number = query['hub.challenge'];
     const verifyToken: string = query['hub.verify_token'];
@@ -36,7 +75,27 @@ router.get('/api/webhook', function(req, res) {
 
 
 router.post('/api/webhook', function(req, res) {
-    console.log(req);
+    req.body as IWhatsAppWebhook;
+    const { entry } = req.body;
+    
+    if (!entry || entry.length === 0) {
+        res.status(401).send();
+    }
+    
+    if (!entry[0].changes || entry[0].changes.length === 0){
+        res.status(401).send();
+    }
+    
+    const message = entry[0].changes[0].value.messages[0] ? entry[0].changes[0].value.messages[0] : null;
+    console.log(message);
+
+    if (message){
+        res.status(200).send();
+        handleIncomingMessage(message);
+    }
+
+    res.status(401).send();
+
 });
 
 export default router;
