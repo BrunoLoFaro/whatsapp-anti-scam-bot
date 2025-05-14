@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
       {
-        "type": "pwa-node",
+        "type": "node",
         "request": "launch",
         "name": "Debug TypeScript with ts-node",
         "runtimeArgs": ["--require", "ts-node/register"],
@@ -10,7 +10,25 @@
         "cwd": "${workspaceFolder}",
         "skipFiles": ["<node_internals>/**"],
         "envFile": "${workspaceFolder}/.env"
-      }
+      },
+      {
+      "name": "Debug Jest Tests",
+      "type": "node",
+      "request": "launch",
+      "runtimeArgs": [
+        "--inspect-brk",
+        "${workspaceRoot}/node_modules/.bin/jest",
+        "--runInBand"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Attach",
+      "port": 9229
+    }
     ]
   }
   
