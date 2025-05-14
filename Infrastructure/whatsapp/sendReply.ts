@@ -7,14 +7,14 @@
  */
 
 import axios from 'axios';
-import logger from '../logging/logger';
+import logger from '../logging/logger.js';
 
-import config from '../../config';
+import config from '../../config.js';
 
 
-interface apiResponse {
+interface IapiResponse {
   success: boolean,
-  data?: dataResponse,
+  data?: IdataResponse,
   error?: errorResponse
 }
 
@@ -28,7 +28,7 @@ interface errorResponse {
   }
 }
 
-interface dataResponse {
+interface IdataResponse {
   messaging_product: string,
   contacts: [
     {
@@ -43,19 +43,21 @@ interface dataResponse {
   ]
 }
 
-export default async function sendReplyToWpp(message: string, userPhoneNumber: string ): Promise<apiResponse> {
+export default async function sendReplyToWpp(message: string, userPhoneNumber: string ): Promise<IapiResponse> {
   const options = {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `${config.wppAPIToken}`
+      'Authorization': `Bearer ${config.wppAPIToken}`
     }
   }
+
+  const userPhoneNumberSanitized: string = userPhoneNumber.replace(/^549/, '54');
 
   const data = {
     "messaging_product": "whatsapp",
     "recipient_type": "individual",
-    "to": `${userPhoneNumber}`,
+    "to": `${userPhoneNumberSanitized}`,
     "type": "text",
     "text": {
       "preview_url": true,
@@ -66,21 +68,23 @@ export default async function sendReplyToWpp(message: string, userPhoneNumber: s
   const url = `${config.baseUrl}/v22.0/${config.ownNumberID}/messages`;
 
   try {
-    logger.info(`Sending a message to Meta API, for the number ${userPhoneNumber}...`);
+    logger.info(`Sending a message to Meta API, for the number ${userPhoneNumberSanitized}...`);
 
-    const response: dataResponse = await axios.post(url, data, options);
-    logger.info(`Succesfully sent a message to Meta API, for the number ${userPhoneNumber}`);
+    const response: IdataResponse = await axios.post(url, data, options);
+    logger.info(`Succesfully sent a message to Meta API, for the number ${userPhoneNumberSanitized}`);
       return {
         success: true,
         data: response
       };
   } catch (err: any) {
-      logger.error(`Error occurred while trying to send a message to Meta API, for the number ${userPhoneNumber}`);
-      logger.error ('Error Info:' + err);
-      console.error(err);
+      logger.error(`Error occurred while trying to send a message to Meta API, for the number ${userPhoneNumberSanitized}`);
+      const error = err.response.data.error;
+      logger.error ('Error Info:' + error);
+
+      console.error(error);
       return {
         success: false,
-        error: err
+        error: error
       };
   }
 }
