@@ -2,16 +2,8 @@
 export default {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  
-  // Directorio donde están tus tests
   roots: ['<rootDir>/Tests'],
-  
-  // Mapeo de módulos (usando alias @/ si lo necesitas)
-  moduleNameMapper: {
-        '(.+)\\.js': '$1'
-    },
   extensionsToTreatAsEsm: ['.ts'],
-  
   transform: {
     '^.+\\.tsx?$': [
       'ts-jest',
@@ -21,10 +13,14 @@ export default {
       }
     ]
   },
-  
-  // Extensiones a manejar
   moduleFileExtensions: ['ts', 'js', 'json'],
+  testMatch: ['**/*.test.ts'],
   
-  // Patrón para encontrar tests
-  testMatch: ['**/*.test.ts']
+  // Elimina o modifica el moduleNameMapper
+  moduleNameMapper: {
+    // Solo mapea tus propios módulos si es necesario
+    '^@/(.*)$': '<rootDir>/src/$1',
+    // O mantén solo esto si necesitas el mapeo .js
+    '^(\\.{1,2}/.*)\\.js$': '$1'
+  }
 };

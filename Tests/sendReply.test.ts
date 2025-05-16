@@ -86,8 +86,6 @@ describe('Probando Respuesta a la API de WhatsApp', () => {
     mockedAxios.post.mockRejectedValueOnce(mockData);
 
     const response = await sendReplyToWpp('mensaje fallido', "0011223344");
-    console.log(JSON.stringify(`Axios: ${JSON.stringify(response)}`))
-    console.log(JSON.stringify(`MOCK: ${JSON.stringify(mockData)}`))
 
     //verificacion de respuesta de estado de API
     expect(response.success).toBe(false);
