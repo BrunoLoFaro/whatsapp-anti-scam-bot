@@ -24,10 +24,18 @@ describe('Probando Respuesta a la API de WhatsApp', () => {
     test('Debe enviar un mensaje correctamente a la API', async () => {
 
         const mockData = {
-            success: true,
-            data: {
-            }
+        success: true,
+        data: {
+            messaging_product: "whatsapp",
+            contacts: [{
+                input: "5491168851162",
+                wa_id: "5491168851162"
+            }],
+            messages: [{
+                id: "wamid.HBgNNTQ5MTE2ODg1MTE2MhUCABEYEkI4OEFFMjlEOEUyRjBDNjMyQgA="
+            }]
         }
+    };
         
         mockedAxios.post.mockResolvedValueOnce(mockData);
 
@@ -49,7 +57,7 @@ describe('Probando Respuesta a la API de WhatsApp', () => {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `${config.wppAPIToken}`
+            'Authorization': `Bearer ${config.wppAPIToken}`
         }
         });
 
@@ -64,14 +72,18 @@ describe('Probando Respuesta a la API de WhatsApp', () => {
 
     const mockData = {
         success: false,
-        error: {
-            "message": "Unsupported post request. Example",
-            "type": "GraphMethodException Example",
-            "code": 100111,
-            "error_subcode": 3311,
-            "fbtrace_id": "AB8v5praKdgF2bWXoyU_diL123123123123"
+        response: {
+            data: {
+                error: {
+                    message: "Unsupported post request. Example",
+                    type: "GraphMethodException Example",
+                    code: 100111,
+                    error_subcode: 3311,
+                    fbtrace_id: "AB8v5praKdgF2bWXoyU_diL123123123123"
+                }
+            }
         }
-    }
+    };
     
     mockedAxios.post.mockRejectedValueOnce(mockData);
 
