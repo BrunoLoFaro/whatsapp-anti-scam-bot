@@ -2,7 +2,6 @@ import { Router } from 'express';
 import config from '../../config.js';
 
 import handleIncomingMessage from '../handlers/messageReceivedHandler.js';
-import { stat } from 'fs';
 
 const router = Router();
 

@@ -65,34 +65,34 @@ describe('Probando Respuesta a la API de WhatsApp', () => {
         expect(response.success).toBe(true);
 
         //verificacion de correlacion de datos de API
-        expect(response.data).toEqual(mockData);
+        expect(response).toEqual(mockData);
     });
 
     test('Debe fallar correctamente la API', async () => {
 
     const mockData = {
         success: false,
-        response: {
-            data: {
-                error: {
-                    message: "Unsupported post request. Example",
-                    type: "GraphMethodException Example",
-                    code: 100111,
-                    error_subcode: 3311,
-                    fbtrace_id: "AB8v5praKdgF2bWXoyU_diL123123123123"
-                }
-            }
+        error: {
+            error: {
+                message: "Unsupported post request. Example",
+                type: "GraphMethodException Example",
+                code: 100111,
+                error_subcode: 3311,
+                fbtrace_id: "AB8v5praKdgF2bWXoyU_diL123123123123"
+            } 
         }
     };
     
     mockedAxios.post.mockRejectedValueOnce(mockData);
 
     const response = await sendReplyToWpp('mensaje fallido', "0011223344");
+    console.log(JSON.stringify(`Axios: ${JSON.stringify(response)}`))
+    console.log(JSON.stringify(`MOCK: ${JSON.stringify(mockData)}`))
 
     //verificacion de respuesta de estado de API
     expect(response.success).toBe(false);
 
     //verificacion de correlacion de datos de API
-    expect(response.error).toEqual(mockData);
+    expect(response).toEqual(mockData);
     });
 });

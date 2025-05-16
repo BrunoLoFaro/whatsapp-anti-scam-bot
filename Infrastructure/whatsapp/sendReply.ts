@@ -7,9 +7,9 @@
  */
 
 import axios from 'axios';
-import logger from '../logging/logger';
+import logger from '../logging/logger.js';
 
-import config from '../../config';
+import config from '../../config.js';
 
 
 interface IapiResponse {
@@ -70,21 +70,16 @@ export default async function sendReplyToWpp(message: string, userPhoneNumber: s
   try {
     logger.info(`Sending a message to Meta API, for the number ${userPhoneNumberSanitized}...`);
 
-    const response: IdataResponse = await axios.post(url, data, options);
+    const response: IapiResponse = await axios.post(url, data, options);
     logger.info(`Succesfully sent a message to Meta API, for the number ${userPhoneNumberSanitized}`);
-      return {
-        success: true,
-        data: response
-      };
+    
+    return response;
+
   } catch (err: any) {
       logger.error(`Error occurred while trying to send a message to Meta API, for the number ${userPhoneNumberSanitized}`);
-      const error = err.response.data.error;
-      logger.error ('Error Info:' + error);
-
+      const error = err.response ? err.response.data.error : err;
+      logger.error ('Error Info: ' + JSON.stringify(error));
       console.error(error);
-      return {
-        success: false,
-        error: error
-      };
+      return error as unknown as IapiResponse;
   }
 }

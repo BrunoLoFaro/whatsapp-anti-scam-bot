@@ -18,6 +18,6 @@ export default async function handleIncomingMessage(message: Imessage): Promise<
         return;
     }
 
-    await sendReplyToWpp('te estoy respondiendo', from);
+    await sendReplyToWpp(`te estoy copiando, dijiste: ${textMessage}`, from);
 
 }
