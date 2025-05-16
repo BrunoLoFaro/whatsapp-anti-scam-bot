@@ -7,18 +7,18 @@
  */
 
 import axios from 'axios';
-import logger from '../logging/logger.js';
+import logger from '../logging/logger';
 
-import config from '../../config.js';
+import config from '../../config';
 
 
 interface IapiResponse {
   success: boolean,
   data?: IdataResponse,
-  error?: errorResponse
+  error?: IerrorResponse
 }
 
-interface errorResponse {
+interface IerrorResponse {
   error: {
     message: string,
     type: string,
