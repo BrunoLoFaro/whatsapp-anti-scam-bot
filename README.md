@@ -89,6 +89,18 @@ feature/guardar-mensajes-db
 Al terminar, crear un **Pull Request a `develop`**. Pidanme una codereview para poder mergear a develop
 
 ---
+## 📢 Regla de negocio: Envío de mensajes por WhatsApp Business API
+
+La API de WhatsApp Business impone la siguiente regla:  
+**Las empresas solo pueden iniciar conversaciones con mensajes plantilla (template messages).**  
+Una vez que el usuario responde, se pueden enviar otros tipos de mensajes (texto, multimedia, etc.) dentro de una ventana de 24 horas.
+
+> Referencia: [WhatsApp Business API Policy](https://developers.facebook.com/community/threads/651506520396074/)
+
+Esta lógica está implementada en la función `sendReplyToWpp`.  
+Asegúrate de respetar esta regla para evitar errores o bloqueos en el envío de mensajes.
+
+---
 
 ## ✅ Archivos importantes que deben estar presentes
 
