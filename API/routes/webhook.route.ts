@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import config from '../../config.js';
+import logger from '../../Infrastructure/logging/logger.js';
 
 import handleIncomingMessage from '../handlers/messageReceivedHandler.js';
 
@@ -62,14 +63,17 @@ router.get('/api/webhook', function(req, res) {
     const verifyToken: string = query['hub.verify_token'];
 
     if (!challenge || !verifyToken || !mode){
-        res.status(400).json({ error: 'Parametros Incorrectos' });
+        res.status(400).json({ error: 'Parametros No Definidos' });
+        logger.error(`Parametros No Definidos: ${JSON.stringify(req.query)}`);
     }
     
     if (verifyToken !== config.wppOwnWebhookToken){
         res.status(401).json({ error: 'Token Incorrecto' });
+        logger.error(`Token Incorrecto: ${verifyToken}`);
     }
 
-    res.status(200).send(challenge);            
+    res.status(200).send(challenge);
+    return;            
 
 });
 
@@ -80,10 +84,12 @@ router.post('/api/webhook', function(req, res) {
     
     if (!entry || entry.length === 0) {
         res.status(400).send();
+        logger.error('Webhook entry is empty or undefined' + JSON.stringify(req.body));
     }
     
     if (!entry[0].changes || entry[0].changes.length === 0){
         res.status(400).send();
+        logger.error('Webhook changes are empty or undefined' + JSON.stringify(req.body));
     }
     
     const message = entry[0].changes[0].value.messages ? entry[0].changes[0].value.messages[0] : null;
@@ -91,11 +97,13 @@ router.post('/api/webhook', function(req, res) {
 
     if (message){
         res.status(200).send();
+        logger.info(`Mensaje recibido: ${JSON.stringify(message)}`);
         handleIncomingMessage(message);
     }
 
     if (status){
         res.status(200).send();
+        logger.info(`Estado recibido: ${JSON.stringify(status)}`);
         //handleIncomingStatus
     }
 
