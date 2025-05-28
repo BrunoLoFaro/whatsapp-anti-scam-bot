@@ -19,6 +19,7 @@ interface IapiResponse {
 }
 
 interface IerrorResponse {
+  success: boolean,
   error: {
     message?: string,
     type?: string,
@@ -43,7 +44,7 @@ interface IdataResponse {
   ]
 }
 
-export default async function sendReplyToWpp(message: string, userPhoneNumber: string ): Promise<IapiResponse> {
+export default async function sendReplyToWpp(message: string, userPhoneNumber: string ): Promise<IapiResponse | IerrorResponse> {
   const options = {
     method: 'POST',
     headers: {
@@ -83,6 +84,6 @@ export default async function sendReplyToWpp(message: string, userPhoneNumber: s
       const error = err.response ? err.response.data.error : err;
       logger.error ('Error Info: ' + JSON.stringify(error));
       console.error(error);
-      return error as unknown as IapiResponse;
+      return error as IerrorResponse;
   }
 }
