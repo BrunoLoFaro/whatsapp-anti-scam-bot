@@ -99,6 +99,20 @@ Al terminar, crear un **Pull Request a `develop`**. Pidanme una codereview para 
 
 ---
 
+## ☝️ Importante: Sanitización de números de teléfono
+
+Para números de Argentina, **es necesario eliminar el dígito "9" que aparece después del código de país (+54)** antes de enviar respuestas. Si el número contiene el "9", solo se recibe el mensaje pero no se puede responder correctamente.
+
+Ejemplo:  
+- Recibido: `+5491123456789`  
+- Debe enviarse: `+541123456789`
+
+Asegúrense de sanitizar los números antes de responder desde el bot.  
+La lógica de sanitización debe implementarse antes de llamar a la función que envía la respuesta (por ejemplo, en el archivo `sendReply` o donde se gestione el envío de mensajes).
+
+> **Tip:** Revisen el archivo donde se arma el número de destino antes de enviar la respuesta para aplicar esta regla solo a números de Argentina (`+54`).
+
+
 Cualquier duda, consulten!
 
 Arquitectura
