@@ -20,11 +20,11 @@ interface IapiResponse {
 
 interface IerrorResponse {
   error: {
-    message: string,
-    type: string,
-    code: number,
-    error_subcode: number,
-    fbtrace_id: string
+    message?: string,
+    type?: string,
+    code?: number,
+    error_subcode?: number,
+    fbtrace_id?: string
   }
 }
 
@@ -53,6 +53,9 @@ export default async function sendReplyToWpp(message: string, userPhoneNumber: s
   }
 
   const userPhoneNumberSanitized: string = userPhoneNumber.replace(/^549/, '54');
+
+  logger.info(`Not Sanitized phone number: ${userPhoneNumber}`);
+  logger.info(`Sanitized phone number: ${userPhoneNumberSanitized}`);
 
   const data = {
     "messaging_product": "whatsapp",
