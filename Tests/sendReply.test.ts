@@ -93,4 +93,33 @@ describe('Probando Respuesta a la API de WhatsApp', () => {
     //verificacion de correlacion de datos de API
     expect(response).toEqual(mockData);
     });
+
+    test('Simula corte de internet al enviar mensaje', async () => {
+        const networkError = new Error('Network Error');
+        // Simula un error de red típico de axios
+        (networkError as any).code = 'ENOTFOUND';
+        (networkError as any).response = undefined;
+
+        mockedAxios.post.mockRejectedValueOnce(networkError);
+
+        const response = await sendReplyToWpp('mensaje', '0011223344');
+
+        expect(response).toHaveProperty('message', 'Network Error');
+        expect(response).not.toHaveProperty('success', true);
+    });
+
+    test('Simula error de timeout al enviar mensaje', async () => {
+        const timeoutError = new Error('Timeout Error');
+        // Simula un error de timeout típico de axios
+        (timeoutError as any).code = 'ECONNABORTED';
+        (timeoutError as any).response = undefined;
+
+        mockedAxios.post.mockRejectedValueOnce(timeoutError);
+
+        const response = await sendReplyToWpp('mensaje', '0011223344');
+
+        expect(response).toHaveProperty('message', 'Timeout Error');
+        expect(response).not.toHaveProperty('success', true);
+    });
+    
 });
