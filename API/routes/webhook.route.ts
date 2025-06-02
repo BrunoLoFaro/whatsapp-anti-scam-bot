@@ -50,66 +50,69 @@ interface IWhatsAppWebhook {
 }
 
 router.get('/api/webhook', function(req, res) {
-    /* handshake de subcripcion a eventos de mensaje. Se recibe como URL Query: 
-    {    
-        hub.mode=subscribe&
-        hub.challenge=1158201444&
-        hub.verify_token=meatyhamhock
-    } */
+  /* handshake de subcripcion a eventos de mensaje.
+    Se recibe como URL Query: 
+  {    
+      hub.mode=subscribe&
+      hub.challenge=1158201444&
+      hub.verify_token=meatyhamhock
+  } */
 
-    const query = req.query as unknown as IurlQuery;
-    const mode: string = query['hub.mode'];
-    const challenge: number = query['hub.challenge'];
-    const verifyToken: string = query['hub.verify_token'];
+  const query = req.query as unknown as IurlQuery;
+  const mode: string = query['hub.mode'];
+  const challenge: number = query['hub.challenge'];
+  const verifyToken: string = query['hub.verify_token'];
 
-    if (!challenge || !verifyToken || !mode){
-        res.status(400).json({ error: 'Parametros No Definidos' });
-        logger.error(`Parametros No Definidos: ${JSON.stringify(req.query)}`);
-    }
-    
-    if (verifyToken !== config.wppOwnWebhookToken){
-        res.status(401).json({ error: 'Token Incorrecto' });
-        logger.error(`Token Incorrecto: ${verifyToken}`);
-    }
+  if (!challenge || !verifyToken || !mode){
+    res.status(400).json({ error: 'Parametros No Definidos' });
+    logger.error(`Parametros No Definidos: ${JSON.stringify(req.query)}`);
+    return;
+  }
 
-    res.status(200).send(challenge);
-    return;            
+  if (verifyToken !== config.wppOwnWebhookToken){
+    res.status(401).json({ error: 'Token Incorrecto' });
+    logger.error(`Token Incorrecto: ${verifyToken}`);
+    return;
+  }
 
+  res.status(200).send(challenge);
 });
 
 
 router.post('/api/webhook', function(req, res) {
-    req.body as IWhatsAppWebhook;
-    const { entry } = req.body;
-    
-    if (!entry || entry.length === 0) {
-        res.status(400).send();
-        logger.error(`Webhook entry is empty or undefined: ${JSON.stringify(req.body)}`);
-    }
-    
-    if (!entry[0].changes || entry[0].changes.length === 0){
-        res.status(400).send();
-        logger.error(`Webhook changes are empty or undefined: ${JSON.stringify(req.body)}`);
-    }
-    
-    const message = entry[0].changes[0].value.messages ? entry[0].changes[0].value.messages[0] : null;
-    const status = entry[0].changes[0].value.statuses ?  entry[0].changes[0].value.statuses[0] : null;
+  req.body as IWhatsAppWebhook;
+  const { entry } = req.body;
 
-    if (message){
-        res.status(200).send();
-        logger.info(`Mensaje recibido: ${JSON.stringify(message)}`);
-        handleIncomingMessage(message);
-    }
-
-    if (status){
-        res.status(200).send();
-        logger.info(`Estado recibido: ${JSON.stringify(status)}`);
-        //handleIncomingStatus
-    }
-
-    res.status(401).send();
+  if (!entry || entry.length === 0) {
+    res.status(400).send();
+    logger.error(`Webhook entry is empty or undefined: ${JSON.stringify(req.body)}`);
     return;
+  }
 
+  if (!entry[0].changes || entry[0].changes.length === 0){
+    res.status(400).send();
+    logger.error(`Webhook changes are empty or undefined: ${JSON.stringify(req.body)}`);
+    return;
+  }
+
+  const message = entry[0].changes[0].value.messages ? entry[0].changes[0].value.messages[0] : null;
+  const status = entry[0].changes[0].value.statuses ?  entry[0].changes[0].value.statuses[0] : null;
+
+  if (message){
+    res.status(200).send();
+    logger.info(`Mensaje recibido: ${JSON.stringify(message)}`);
+    handleIncomingMessage(message);
+    return;
+  }
+
+  if (status){
+    res.status(200).send();
+    logger.info(`Estado recibido: ${JSON.stringify(status)}`);
+    //handleIncomingStatus
+    return;
+  }
+
+  res.status(401).send();
 });
 
 export default router;
