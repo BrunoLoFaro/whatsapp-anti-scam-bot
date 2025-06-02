@@ -7,9 +7,9 @@ import handleIncomingMessage from '../handlers/messageReceivedHandler.js';
 const router = Router();
 
 interface IurlQuery {
-    'hub.mode': string,
-    'hub.challenge': number,
-    'hub.verify_token': string
+  'hub.mode': string,
+  'hub.challenge': number,
+  'hub.verify_token': string
 }
 
 interface IWhatsAppWebhook {
