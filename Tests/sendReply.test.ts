@@ -24,10 +24,18 @@ describe('Probando Respuesta a la API de WhatsApp', () => {
     test('Debe enviar un mensaje correctamente a la API', async () => {
 
         const mockData = {
-            success: true,
-            data: {
-            }
+        success: true,
+        data: {
+            messaging_product: "whatsapp",
+            contacts: [{
+                input: "5491168851162",
+                wa_id: "5491168851162"
+            }],
+            messages: [{
+                id: "wamid.HBgNNTQ5MTE2ODg1MTE2MhUCABEYEkI4OEFFMjlEOEUyRjBDNjMyQgA="
+            }]
         }
+    };
         
         mockedAxios.post.mockResolvedValueOnce(mockData);
 
@@ -49,7 +57,7 @@ describe('Probando Respuesta a la API de WhatsApp', () => {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `${config.wppAPIToken}`
+            'Authorization': `Bearer ${config.wppAPIToken}`
         }
         });
 
@@ -57,7 +65,7 @@ describe('Probando Respuesta a la API de WhatsApp', () => {
         expect(response.success).toBe(true);
 
         //verificacion de correlacion de datos de API
-        expect(response.data).toEqual(mockData);
+        expect(response).toEqual(mockData);
     });
 
     test('Debe fallar correctamente la API', async () => {
@@ -65,13 +73,15 @@ describe('Probando Respuesta a la API de WhatsApp', () => {
     const mockData = {
         success: false,
         error: {
-            "message": "Unsupported post request. Example",
-            "type": "GraphMethodException Example",
-            "code": 100111,
-            "error_subcode": 3311,
-            "fbtrace_id": "AB8v5praKdgF2bWXoyU_diL123123123123"
+            error: {
+                message: "Unsupported post request. Example",
+                type: "GraphMethodException Example",
+                code: 100111,
+                error_subcode: 3311,
+                fbtrace_id: "AB8v5praKdgF2bWXoyU_diL123123123123"
+            } 
         }
-    }
+    };
     
     mockedAxios.post.mockRejectedValueOnce(mockData);
 
@@ -81,6 +91,35 @@ describe('Probando Respuesta a la API de WhatsApp', () => {
     expect(response.success).toBe(false);
 
     //verificacion de correlacion de datos de API
-    expect(response.error).toEqual(mockData);
+    expect(response).toEqual(mockData);
     });
+
+    test('Simula corte de internet al enviar mensaje', async () => {
+        const networkError = new Error('Network Error');
+        // Simula un error de red típico de axios
+        (networkError as any).code = 'ENOTFOUND';
+        (networkError as any).response = undefined;
+
+        mockedAxios.post.mockRejectedValueOnce(networkError);
+
+        const response = await sendReplyToWpp('mensaje', '0011223344');
+
+        expect(response).toHaveProperty('message', 'Network Error');
+        expect(response).not.toHaveProperty('success', true);
+    });
+
+    test('Simula error de timeout al enviar mensaje', async () => {
+        const timeoutError = new Error('Timeout Error');
+        // Simula un error de timeout típico de axios
+        (timeoutError as any).code = 'ECONNABORTED';
+        (timeoutError as any).response = undefined;
+
+        mockedAxios.post.mockRejectedValueOnce(timeoutError);
+
+        const response = await sendReplyToWpp('mensaje', '0011223344');
+
+        expect(response).toHaveProperty('message', 'Timeout Error');
+        expect(response).not.toHaveProperty('success', true);
+    });
+    
 });
