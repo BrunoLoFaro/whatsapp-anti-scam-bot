@@ -1,12 +1,9 @@
 name: Run Jest Tests
 
-on:
-  push:
-    branches: [ main, develop ]
-    branches-ignore: [ 'feature/**' ]  # Ignora pushes a feature/*
-    
-  pull_request:
-    branches: [ main, develop ]  # PRs hacia main/develop (no necesitas branches-ignore)
+on: [push, pull_request]
+  branches: 
+  - main
+  - develop
 
 jobs:
   test:
