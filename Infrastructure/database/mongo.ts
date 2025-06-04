@@ -1,6 +1,4 @@
-import dotenv from 'dotenv';
 import config from '../../config.js';
-dotenv.config(); // Cargar las variables de entorno desde el archivo .env
 
 import mongoose from 'mongoose';
 import logger from '../../Infrastructure/logging/logger.js';
