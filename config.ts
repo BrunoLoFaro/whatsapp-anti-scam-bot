@@ -8,6 +8,7 @@ interface configType {
     ownNumberID?: string,
     baseUrl: string,
     wppOwnWebhookToken?: string
+    mongoDBUri?: string
 };
 
 class Config implements configType{
@@ -16,6 +17,7 @@ class Config implements configType{
     public ownNumberID = process.env.PHONE_NUMBER_ID;
     public baseUrl = "https://graph.facebook.com";
     public wppOwnWebhookToken = process.env.MY_WHATSAPP_TOKEN;
+    public mongoDBUri = process.env.MONGODB_URI;
 };
 
 export default new Config();
