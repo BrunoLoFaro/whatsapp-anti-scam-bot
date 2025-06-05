@@ -6,7 +6,7 @@ Este proyecto es un backend en Node.js que se conecta con la API de WhatsApp Bus
 
 ## 🚀 Requisitos para correr el proyecto
 
-- Node.js 18 o superior  
+- Node.js 22.x o superior 
 - npm (v9+)  
 - Visual Studio Code  
 ```bash

@@ -1,0 +1,25 @@
+name: Run Jest Tests
+
+on:
+  push:
+    branches: [ main, develop ]  # Push hacia main/develop
+    
+  pull_request:
+    branches: [ main, develop ]  # PRs hacia main/develop
+
+jobs:
+  test:
+    runs-on: ubuntu-latest  # Probar sobre VM con Ultima Version de Ubuntu
+    steps:
+      - uses: actions/checkout@v4  # Descarga el código del repositorio
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4  # Prepara el entorno de Node
+        with:
+          node-version: '22.x'  # Usa la última versión LTS de Node
+
+      - name: Install dependencies
+        run: npm install  # Instala Dependencias
+
+      - name: Run Jest tests
+        run: npm test  # Corre los Tests Unitarios
