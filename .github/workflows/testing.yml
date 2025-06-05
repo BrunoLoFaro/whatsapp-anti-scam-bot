@@ -2,28 +2,24 @@ name: Run Jest Tests
 
 on:
   push:
-    branches: [ main, develop, '!feature/**' ]
+    branches: [ main, develop ]  # Push hacia main/develop
     
   pull_request:
-    branches: [ main, develop, '!feature/**' ]  # PRs hacia main/develop (no necesitas branches-ignore)
+    branches: [ main, develop ]  # PRs hacia main/develop
 
 jobs:
   test:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [ '18.x', '20.x', '21.x' ]  # Matriz de versiones
-    name: Node ${{ matrix.node-version }} Tests
+    runs-on: ubuntu-latest  # Probar sobre VM con Ultima Version de Ubuntu
     steps:
       - uses: actions/checkout@v4  # Descarga el código del repositorio
       
-      - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4  # Prepara el entorno de Node
         with:
-          node-version: ${{ matrix.node-version }}  # Usa la versión de la matriz
+          node-version: '22.x'  # Usa la última versión LTS de Node
 
       - name: Install dependencies
-        run: npm install
+        run: npm install  # Instala Dependencias
 
       - name: Run Jest tests
-        run: npm test
+        run: npm test  # Corre los Tests Unitarios
