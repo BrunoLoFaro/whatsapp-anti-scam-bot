@@ -89,6 +89,18 @@ feature/guardar-mensajes-db
 Al terminar, crear un **Pull Request a `develop`**. Pidanme una codereview para poder mergear a develop
 
 ---
+## 📢 Regla de negocio: Envío de mensajes por WhatsApp Business API
+
+La API de WhatsApp Business impone la siguiente regla:  
+**Las empresas solo pueden iniciar conversaciones con mensajes plantilla (template messages).**  
+Una vez que el usuario responde, se pueden enviar otros tipos de mensajes (texto, multimedia, etc.) dentro de una ventana de 24 horas.
+
+> Referencia: [WhatsApp Business API Policy](https://developers.facebook.com/community/threads/651506520396074/)
+
+Esta lógica está implementada en la función `sendReplyToWpp`.  
+Asegúrate de respetar esta regla para evitar errores o bloqueos en el envío de mensajes.
+
+---
 
 ## ✅ Archivos importantes que deben estar presentes
 
@@ -98,6 +110,20 @@ Al terminar, crear un **Pull Request a `develop`**. Pidanme una codereview para 
 - Carpeta `logs/` creada si no existe
 
 ---
+
+## ☝️ Importante: Sanitización de números de teléfono
+
+Para números de Argentina, **es necesario eliminar el dígito "9" que aparece después del código de país (+54)** antes de enviar respuestas. Si el número contiene el "9", solo se recibe el mensaje pero no se puede responder correctamente.
+
+Ejemplo:  
+- Recibido: `+5491123456789`  
+- Debe enviarse: `+541123456789`
+
+Asegúrense de sanitizar los números antes de responder desde el bot.  
+La lógica de sanitización debe implementarse antes de llamar a la función que envía la respuesta (por ejemplo, en el archivo `sendReply` o donde se gestione el envío de mensajes).
+
+> **Tip:** Revisen el archivo donde se arma el número de destino antes de enviar la respuesta para aplicar esta regla solo a números de Argentina (`+54`).
+
 
 Cualquier duda, consulten!
 

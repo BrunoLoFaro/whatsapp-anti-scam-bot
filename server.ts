@@ -1,18 +1,33 @@
-import express from 'express';
 import dotenv from 'dotenv';
+import express from 'express';
 import connectToMongo from './Infrastructure/database/mongo.js';
+
 import logger from './Infrastructure/logging/logger.js';
-import api from './API/index.js';
+import config from './config.js'
+import whatsAppWebHookRoute from './API/routes/webhook.route.js';
+
+const apiServer = express();
+
+//Middleware
+apiServer.use(express.json());
+
+//Routes
+apiServer.use(whatsAppWebHookRoute);
 
 dotenv.config();
-const app = express();
-app.use(express.json());
 
 logger.info('Starting server...');
 
+const configPropiedades = Object.values(config);
+configPropiedades.forEach(propiedad => {
+    if (!propiedad){
+        logger.error('Archivo .env o config incompleto o no existente, abortando...');
+        throw new Error('Propiedad en archivo .env o config no definida');
+    }
+});
+
 await connectToMongo();
 
-app.use('/api', api);
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => logger.info(`Server running on port ${PORT}`));
+apiServer.listen(config.webPort, function() {
+    logger.info(`API Server listening on Port ${config.webPort} ...`);
+});
