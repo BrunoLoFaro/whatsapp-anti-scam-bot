@@ -4,7 +4,7 @@ import router from '../API/routes/webhook.route'; // Ajusta la ruta
 import config from '../config.js';
 import handleIncomingMessage from '../API/handlers/messageReceivedHandler';
 
-import logger from '../Infrastructure/logging/logger';
+import logger from '../Infrastructure/logging/logger.js';
 
 import { describe, test, jest, expect } from '@jest/globals'
 
@@ -18,7 +18,7 @@ jest.mock('../API/handlers/messageReceivedHandler', () => ({
   default: jest.fn()
 }));
 
-jest.mock('../logging/logger', () => ({
+jest.mock('../Infrastructure/logging/logger', () => ({
     info: jest.fn(),
     error: jest.fn(),
 }));
