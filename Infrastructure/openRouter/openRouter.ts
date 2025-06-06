@@ -54,7 +54,7 @@ export default async function processPrompt(prompt: string): Promise<string | nu
       ],
     });
 
-  logger.info(`Received response from model: ${completion.choices[0].message}`);
+  logger.info(`Received response from model: ${completion?.choices?.[0]?.message?.content ?? 'No content'}`);
 
   return completion?.choices?.[0]?.message?.content ?? null;
 
