@@ -4,6 +4,8 @@ import router from '../API/routes/webhook.route'; // Ajusta la ruta
 import config from '../config.js';
 import handleIncomingMessage from '../API/handlers/messageReceivedHandler';
 
+import logger from '../Infrastructure/logging/logger';
+
 import { describe, test, jest, expect } from '@jest/globals'
 
 jest.mock('../config', () => ({
@@ -14,6 +16,11 @@ jest.mock('../config', () => ({
 jest.mock('../API/handlers/messageReceivedHandler', () => ({
   __esModule: true,
   default: jest.fn()
+}));
+
+jest.mock('../logging/logger', () => ({
+    info: jest.fn(),
+    error: jest.fn(),
 }));
 
 const apiServer = express();

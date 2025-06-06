@@ -3,11 +3,17 @@ import axios from 'axios';
 import { describe, test, jest, afterEach, expect } from '@jest/globals'
 
 import sendReplyToWpp from '../Infrastructure/whatsapp/sendReply';
+import logger from '../Infrastructure/logging/logger';
 
 jest.mock('axios');
 jest.mock('../config.ts', () => ({
     wppAPIToken: 'fake-wpp-token',
     ownNumberID: '123456789'
+}));
+
+jest.mock('../logging/logger', () => ({
+    info: jest.fn(),
+    error: jest.fn(),
 }));
 
 import config from '../config';
