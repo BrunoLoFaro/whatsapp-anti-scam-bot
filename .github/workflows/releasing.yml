@@ -26,20 +26,6 @@ jobs:
       - name: Build Project
         run: npm run build # Compila el proyecto
 
-      # 
-      # Un artifact (artefacto) es un archivo o conjunto de archivos generados durante el proceso de CI/CD,
-      # como el resultado de una compilación, pruebas o empaquetado. Los artifacts pueden ser utilizados para:
-      # - Compartir archivos entre diferentes jobs en el workflow.
-      # - Descargar los resultados del build para pruebas manuales o despliegue.
-      # - Almacenar binarios, reportes, o cualquier archivo relevante generado en el pipeline.
-      #
-
-      - name: Upload Artifact (Opcional)
-        uses: actions/upload-artifact@v3
-        with:
-          name: build-output
-          path: dist/ # Carpeta de salida del build
-
       - name: Compress build folder
         run: zip -r build-output.zip dist # Comprime la carpeta de salida
 
