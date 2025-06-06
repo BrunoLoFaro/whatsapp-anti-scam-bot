@@ -6,7 +6,7 @@ interface configType {
     webPort?: number,
     wppAPIToken?: string,
     ownNumberID?: string,
-    baseUrl: string,
+    metaBaseUrl?: string,
     wppOwnWebhookToken?: string
 };
 
@@ -14,7 +14,7 @@ class Config implements configType{
     public webPort = process.env.PORT ? parseInt(process.env.PORT) : undefined;
     public wppAPIToken = process.env.WHATSAPP_TOKEN;
     public ownNumberID = process.env.PHONE_NUMBER_ID;
-    public baseUrl = "https://graph.facebook.com";
+    public metaBaseUrl = process.env.META_BASE_URL;
     public wppOwnWebhookToken = process.env.MY_WHATSAPP_TOKEN;
 };
 

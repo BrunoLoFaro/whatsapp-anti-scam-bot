@@ -42,7 +42,7 @@ describe('Probando Respuesta a la API de WhatsApp', () => {
         const response = await sendReplyToWpp('test', "0011223344");
         
         //verificacion de argumentos correctos
-        expect(mockedAxios.post).toBeCalledWith(`${config.baseUrl}/v22.0/${config.ownNumberID}/messages`,
+        expect(mockedAxios.post).toBeCalledWith(`${config.metaBaseUrl}/v22.0/${config.ownNumberID}/messages`,
         {
             "messaging_product": "whatsapp",
             "recipient_type": "individual",
