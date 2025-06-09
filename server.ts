@@ -18,14 +18,15 @@ dotenv.config();
 
 logger.info('Starting server...');
 
-const configPropiedades = Object.values(config);
-configPropiedades.forEach(propiedad => {
-    if (!propiedad){
-        logger.error('Archivo .env o config incompleto o no existente, abortando...');
-        throw new Error('Propiedad en archivo .env o config no definida');
-    }
-});
+const configPropiedades = Object.entries(config);
+const propiedadesFaltantes = configPropiedades.filter(([clave, valor]) => !valor);//Filtra aquellas claves que tienen como valores datos indefinidos, nulos o vacios
 
+if (propiedadesFaltantes.length > 0) {
+    propiedadesFaltantes.forEach(([clave]) => {
+        logger.error(`❌ La propiedad '${clave}' no está definida en el archivo .env o en config.js`);
+    });
+    throw new Error('⚠️ Configuración incompleta: faltan propiedades en el archivo .env o config.js');
+}
 await connectToMongo();
 
 apiServer.listen(config.webPort, function() {
