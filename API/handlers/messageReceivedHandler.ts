@@ -26,6 +26,6 @@ export default async function handleIncomingMessage(message: Imessage): Promise<
         return;
     }
 
-    await sendReplyToWpp(`${modelResponse}`, from);
+    await sendReplyToWpp(modelResponse, from);
 
 }
