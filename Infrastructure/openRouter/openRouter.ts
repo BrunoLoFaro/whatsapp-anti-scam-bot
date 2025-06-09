@@ -1,6 +1,6 @@
 import OpenAI from 'openai';
-import config from '../../config';
-import logger from '../logging/logger';
+import config from '../../config.js';
+import logger from '../logging/logger.js';
 
 const openai = new OpenAI({
   baseURL: `${config.openRouterBaseUrl}`,
