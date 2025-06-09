@@ -108,8 +108,6 @@ describe('Probando procesamiento del Prompt con OpenRouterAPI', () => {
 
         const result = await processPrompt(fakePrompt);
 
-        console.error(result + 'ACA');
-
         expect(result).toBeNull();
     });
 
