@@ -121,7 +121,7 @@ describe('Webhook Router TEST', function() {
             expect(response.status).toBe(400);
         });
 
-        test('Mising changes array in  entry array test - Bad Parameters', async function() {
+        test('Missing changes array in  entry array test - Bad Parameters', async function() {
             const response = await request(apiServer).post('/api/webhook').send(invalidChanges);
             
             expect(response.status).toBe(400);
