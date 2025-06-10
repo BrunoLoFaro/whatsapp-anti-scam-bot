@@ -49,12 +49,21 @@ npm install
 Crear un archivo `.env` en la raíz con:
 ```
 PORT=3000                            # Puerto en el que corre el servidor local
-WHATSAPP_TOKEN=<<token temporal>>   # Token de acceso generado por Meta
-PHONE_NUMBER_ID=<<número de prueba>># ID del número en el entorno sandbox
-MONGODB_URI=<<cadena de conexión>>  # URI de tu base de datos MongoDB
+WHATSAPP_TOKEN=<<token temporal>>    # Token de acceso generado por Meta
+PHONE_NUMBER_ID=<<número de prueba>> # ID del número en el entorno sandbox
+MONGODB_URI=<<cadena de conexión>>   # URI de tu base de datos MongoDB
 
 # SAME AS DEV.META >> WHATSAPP >> WEBHOOK
 MY_WHATSAPP_TOKEN=<<token configurado en WhatsApp -> Webhook >>
+META_BASE_URL=https://graph.facebook.com           # URL base para la API de Meta
+
+# OPENROUTER CONFIGURATION
+OPENROUTER_API_KEY=<<tu api key de openrouter>>    # Clave de API para OpenRouter
+OPENROUTER_BASE_URL=https://openrouter.ai/api/v1   # URL base de la API de OpenRouter
+OPENROUTER_MODEL=google/gemini-2.0-flash-exp:free  # Modelo de IA a utilizar
+
+# PROMPT INSTRUCTIONS INJECTION
+PROMPT_INSTRUCTIONS=Necesito que evalues si el siguiente mensaje que recibi por WhatsApp que te voy a pasar podria ser un mensaje de phishing o no. No me digas si luego necesito ayuda con algo mas. Solo decime analiza el mensaje y dame tu devolucion. Hace una firma de tu modelo. Muy importante, necesitas saber que es para que lo lea una persona muy mayor de edad por lo que usa ejemplos, lenguaje claro y emojis. No uses tecnisismos ni palabras complicadas. # Instrucciones para el prompt que se enviará al modelo de IA
 ```
 4. **correr el proyecto**
 ```bash
@@ -127,6 +136,7 @@ La lógica de sanitización debe implementarse antes de llamar a la función que
 
 > **Tip:** Revisen el archivo donde se arma el número de destino antes de enviar la respuesta para aplicar esta regla solo a números de Argentina (`+54`).
 
+---
 
 Cualquier duda, consulten!
 
