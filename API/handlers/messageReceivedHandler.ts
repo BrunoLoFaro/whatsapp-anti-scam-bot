@@ -1,4 +1,5 @@
 import sendReplyToWpp from "../../Infrastructure/whatsapp/sendReply.js";
+import processPrompt from "../../Infrastructure/openRouter/openRouter.js";
 
 interface Imessage {
     from: string; // Número remitente (debe coincidir con wa_id)
@@ -18,6 +19,13 @@ export default async function handleIncomingMessage(message: Imessage): Promise<
         return;
     }
 
-    await sendReplyToWpp(`te estoy copiando, dijiste: ${textMessage}`, from);
+    const modelResponse = await processPrompt(textMessage);
+
+    if (!modelResponse) {
+        await sendReplyToWpp("Lo siento, no pude procesar tu mensaje.", from);
+        return;
+    }
+
+    await sendReplyToWpp(modelResponse, from);
 
 }

@@ -69,13 +69,13 @@ export default async function sendReplyToWpp(message: string, userPhoneNumber: s
     }
   }
 
-  const url = `${config.baseUrl}/v22.0/${config.ownNumberID}/messages`;
+  const url = `${config.metaBaseUrl}/v22.0/${config.ownNumberID}/messages`;
 
   try {
     logger.info(`Sending a message to Meta API, for the number ${userPhoneNumberSanitized}...`);
 
     const response: IapiResponse = await axios.post(url, data, options);
-    logger.info(`Succesfully sent a message to Meta API, for the number ${userPhoneNumberSanitized}`);
+    logger.info(`Successfully sent a message to Meta API, for the number ${userPhoneNumberSanitized}`);
     
     return response;
 
