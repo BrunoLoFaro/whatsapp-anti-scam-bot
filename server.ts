@@ -24,7 +24,7 @@ process.on('uncaughtException', function(error) {
 });
 
 process.on('unhandledRejection', function(reason, promise) {
-    logger.error(`unhandledRejection: ${reason} --> from: ${promise}`);
+    logger.error(`unhandledRejection: ${reason} --> from: ${JSON.stringify(promise)}`);
     process.exit(1);
 });
 
