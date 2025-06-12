@@ -20,12 +20,10 @@ logger.info('Starting server...');
 
 process.on('uncaughtException', function(error) {
     logger.error(`uncaughtException: ${error}`);
-    process.exit(1);
 });
 
 process.on('unhandledRejection', function(reason, promise) {
     logger.error(`unhandledRejection: ${reason} --> from: ${JSON.stringify(promise)}`);
-    process.exit(1);
 });
 
 const configPropiedades = Object.values(config);
