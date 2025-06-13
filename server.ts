@@ -18,6 +18,14 @@ dotenv.config();
 
 logger.info('Starting server...');
 
+process.on('uncaughtException', function(error) {
+    logger.error(`uncaughtException: ${error}`);
+});
+
+process.on('unhandledRejection', function(reason, promise) {
+    logger.error(`unhandledRejection: ${reason} --> from: ${JSON.stringify(promise)}`);
+});
+
 const configPropiedades = Object.values(config);
 configPropiedades.forEach(propiedad => {
     if (!propiedad){
