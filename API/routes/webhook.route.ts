@@ -115,4 +115,10 @@ router.post('/api/webhook', function(req, res) {
   res.status(401).send();
 });
 
+router.get('/api/health', function(req, res) {
+    res.status(200).send();
+    logger.info(`Health ejecutado`);
+    return;
+});
+
 export default router;
