@@ -24,12 +24,11 @@ const propiedadesFaltantes = configPropiedades.filter(
 if (propiedadesFaltantes.length > 0) {
   propiedadesFaltantes.forEach(([clave]) => {
     logger.error(
-      `❌ La propiedad '${clave}' no está definida en el archivo .env o en config.js`
+      `La propiedad '${clave}' no está definida en el archivo .env o en config.js`
     );
   });
-  throw new Error(
-    "⚠️ Configuración incompleta: faltan propiedades en el archivo .env o config.js"
-  );
+  await new Promise((resolve) => setTimeout(resolve, 100));
+  process.exit(1);
 }
 await connectToMongo();
 
