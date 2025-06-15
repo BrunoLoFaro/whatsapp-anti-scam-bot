@@ -18,6 +18,14 @@ dotenv.config();
 
 logger.info("Starting server...");
 
+process.on('uncaughtException', function(error) {
+    logger.error(`uncaughtException: ${error}`);
+});
+
+process.on('unhandledRejection', function(reason, promise) {
+    logger.error(`unhandledRejection: ${reason} --> from: ${JSON.stringify(promise)}`);
+});
+
 const configPropiedades = Object.entries(config);
 
 const propiedadesFaltantes = configPropiedades.filter(([clave, valor]) => valor === undefined || valor === null || valor === ""); //Filtra aquellas claves que tienen como valores datos indefinidos, nulos o vacios

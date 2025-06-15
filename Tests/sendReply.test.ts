@@ -3,11 +3,17 @@ import axios from 'axios';
 import { describe, test, jest, afterEach, expect } from '@jest/globals'
 
 import sendReplyToWpp from '../Infrastructure/whatsapp/sendReply';
+import logger from '../Infrastructure/logging/logger.js';
 
 jest.mock('axios');
 jest.mock('../config.ts', () => ({
     wppAPIToken: 'fake-wpp-token',
     ownNumberID: '123456789'
+}));
+
+jest.mock('../Infrastructure/logging/logger', () => ({
+    info: jest.fn(),
+    error: jest.fn(),
 }));
 
 import config from '../config';
@@ -42,7 +48,7 @@ describe('Probando Respuesta a la API de WhatsApp', () => {
         const response = await sendReplyToWpp('test', "0011223344");
         
         //verificacion de argumentos correctos
-        expect(mockedAxios.post).toBeCalledWith(`${config.baseUrl}/v22.0/${config.ownNumberID}/messages`,
+        expect(mockedAxios.post).toBeCalledWith(`${config.metaBaseUrl}/v22.0/${config.ownNumberID}/messages`,
         {
             "messaging_product": "whatsapp",
             "recipient_type": "individual",

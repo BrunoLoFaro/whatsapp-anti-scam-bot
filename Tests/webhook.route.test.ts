@@ -4,6 +4,8 @@ import router from '../API/routes/webhook.route'; // Ajusta la ruta
 import config from '../config.js';
 import handleIncomingMessage from '../API/handlers/messageReceivedHandler';
 
+import logger from '../Infrastructure/logging/logger.js';
+
 import { describe, test, jest, expect } from '@jest/globals'
 
 jest.mock('../config', () => ({
@@ -14,6 +16,11 @@ jest.mock('../config', () => ({
 jest.mock('../API/handlers/messageReceivedHandler', () => ({
   __esModule: true,
   default: jest.fn()
+}));
+
+jest.mock('../Infrastructure/logging/logger', () => ({
+    info: jest.fn(),
+    error: jest.fn(),
 }));
 
 const apiServer = express();
@@ -114,7 +121,7 @@ describe('Webhook Router TEST', function() {
             expect(response.status).toBe(400);
         });
 
-        test('Mising changes array in  entry array test - Bad Parameters', async function() {
+        test('Missing changes array in  entry array test - Bad Parameters', async function() {
             const response = await request(apiServer).post('/api/webhook').send(invalidChanges);
             
             expect(response.status).toBe(400);

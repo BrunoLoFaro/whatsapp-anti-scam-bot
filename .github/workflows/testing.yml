@@ -7,6 +7,8 @@ on:
   pull_request:
     branches: [ main, develop ]  # PRs hacia main/develop
 
+  workflow_call: # Ser llamado por otras Actions
+
 jobs:
   test:
     runs-on: ubuntu-latest  # Probar sobre VM con Ultima Version de Ubuntu
