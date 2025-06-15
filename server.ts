@@ -19,17 +19,19 @@ dotenv.config();
 logger.info("Starting server...");
 
 const configPropiedades = Object.entries(config);
-const propiedadesFaltantes = configPropiedades.filter(
-  ([clave, valor]) => valor === undefined || valor === null || valor === ""); //Filtra aquellas claves que tienen como valores datos indefinidos, nulos o vacios
+
+const propiedadesFaltantes = configPropiedades.filter(([clave, valor]) => valor === undefined || valor === null || valor === ""); //Filtra aquellas claves que tienen como valores datos indefinidos, nulos o vacios
+
 if (propiedadesFaltantes.length > 0) {
+
   propiedadesFaltantes.forEach(([clave]) => {
-    logger.error(
-      `La propiedad '${clave}' no está definida en el archivo .env o en config.js`
-    );
+    logger.error(`La propiedad '${clave}' no está definida en el archivo .env o en config.js`);
   });
+
   await new Promise((resolve) => setTimeout(resolve, 100));
   process.exit(1);
 }
+
 await connectToMongo();
 
 apiServer.listen(config.webPort, function () {
