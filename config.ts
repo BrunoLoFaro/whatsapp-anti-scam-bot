@@ -12,6 +12,7 @@ interface configType {
     openRouterBaseUrl?: string,
     openRouterModel?: string,
     promptInstructions?: string,
+    promptAdviceInstructions?: string,
     greetTemplateFlowName?: string,
     midFlowTemplateFlowName?: string,
     terminateFlowTemplateFlowName?: string,
@@ -28,6 +29,7 @@ class Config implements configType{
     public openRouterBaseUrl = process.env.OPENROUTER_BASE_URL;
     public openRouterModel = process.env.OPENROUTER_MODEL;
     public promptInstructions = process.env.PROMPT_INSTRUCTIONS;
+    public promptAdviceInstructions = process.env.PROMPT_ADVICE_INSTRUCTIONS;
     public greetTemplateFlowName = process.env.GREET_TEMPLATE_NAME;
     public midFlowTemplateFlowName = process.env.MID_FLOW_TEMPLATE_NAME;
     public terminateFlowTemplateFlowName = process.env.TERMINATE_FLOW_TEMPLATE_NAME;

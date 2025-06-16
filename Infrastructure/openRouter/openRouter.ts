@@ -1,4 +1,5 @@
 import OpenAI from 'openai';
+import type { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
 import config from '../../config.js';
 import logger from '../logging/logger.js';
 
@@ -32,26 +33,43 @@ interface OpenRouterResponse {
 }
 
 
-export default async function processPrompt(prompt: string): Promise<string | null> {
+export default async function processPrompt(advice: boolean, prompt?: string, ): Promise<string | null> {
   // This function demonstrates how to use the OpenAI API to process a prompt 
   // and return the response from the model
+  let message: ChatCompletionMessageParam[] = [];
 
   logger.info(`Using model: ${config.openRouterModel}`);
-  logger.info(`... Processing prompt: ${prompt}`);
+  
+  if (advice){
+    logger.info(`Asking model for Phishing Advice: ${advice}`);
+
+    message = [
+      {
+        role: 'user',
+        content: `${config.promptAdviceInstructions}`,        
+      }
+    ]
+
+  } else {
+
+    logger.info(`... Processing prompt: ${prompt}`);
+
+    message = [      
+      {
+        role: 'system',
+        content: `${config.promptInstructions}`,
+      },
+      {
+        role: 'user',
+        content: `${prompt}`,
+      },
+    ]
+  }
 
   try {
     const completion: OpenRouterResponse = await openai.chat.completions.create({
       model: `${config.openRouterModel}`,
-      messages: [
-        {
-          role: 'system',
-          content: `${config.promptInstructions}`,
-        },
-        {
-          role: 'user',
-          content: `${prompt}`,
-        },
-      ],
+      messages: message
     });
 
   logger.info(`Received response from model: ${completion?.choices?.[0]?.message?.content ?? 'No content'}`);
