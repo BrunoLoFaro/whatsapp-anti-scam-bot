@@ -13,7 +13,10 @@ interface configType {
     openRouterModel?: string,
     openRouterFallbackModel1?: string,
     openRouterFallbackModel2?: string
-    promptInstructions?: string,
+    promptInstructions?: string,,
+    greetTemplateFlowName?: string,
+    midFlowTemplateFlowName?: string,
+    terminateFlowTemplateFlowName?: string,
 };
 
 class Config implements configType{
@@ -28,6 +31,9 @@ class Config implements configType{
     public promptInstructions = process.env.PROMPT_INSTRUCTIONS;
     public openRouterFallbackModel1 = process.env.OPENROUTER_FALLBACK_MODEL1;
     public openRouterFallbackModel2 = process.env.OPENROUTER_FALLBACK_MODEL2;
+    public greetTemplateFlowName = process.env.GREET_TEMPLATE_NAME;
+    public midFlowTemplateFlowName = process.env.MID_FLOW_TEMPLATE_NAME;
+    public terminateFlowTemplateFlowName = process.env.TERMINATE_FLOW_TEMPLATE_NAME;
 };
 
 export default new Config();
