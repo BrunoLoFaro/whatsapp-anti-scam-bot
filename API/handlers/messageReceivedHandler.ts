@@ -1,4 +1,4 @@
-import analyzeScamAndRespond from "../../Application/usecases/analizeScamAndRespondUseCase.js";
+import analyzeScamAndRespond from "../../Application/usecases/analyzeScamAndRespondUseCase.js";
 import logger from "../../Infrastructure/logging/logger.js";
 
 interface IMessage {

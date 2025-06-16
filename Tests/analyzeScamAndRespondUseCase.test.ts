@@ -1,6 +1,6 @@
 import sendReplyToWpp from "../Infrastructure/whatsapp/sendReply.js";
 import processPrompt from "../Infrastructure/openRouter/openRouter.js";
-import analyzeScamAndRespond from "../Application/usecases/analizeScamAndRespondUseCase.js"
+import analyzeScamAndRespond from "../Application/usecases/analyzeScamAndRespondUseCase.js"
 
 import { describe, test, jest, expect, beforeEach } from '@jest/globals'
 
