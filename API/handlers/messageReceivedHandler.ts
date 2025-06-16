@@ -1,7 +1,7 @@
-import sendReplyToWpp from "../../Infrastructure/whatsapp/sendReply.js";
-import processPrompt from "../../Infrastructure/openRouter/openRouter.js";
+import analyzeScamAndRespond from "../../Application/usecases/analyzeScamAndRespondUseCase.js";
+import logger from "../../Infrastructure/logging/logger.js";
 
-interface Imessage {
+interface IMessage {
     from: string; // Número remitente (debe coincidir con wa_id)
     id: string; // ID único del mensaje (Ej: "ABGGFlA5Fpa")
     timestamp: string; // Unix timestamp (Ej: "1504902988")
@@ -11,21 +11,18 @@ interface Imessage {
     };
 }
 
-export default async function handleIncomingMessage(message: Imessage): Promise<void> {
+export default async function handleIncomingMessage(message: IMessage): Promise<void> {
     const from = message.from;
     const textMessage = message.text ? message.text.body : null;
 
     if (!textMessage){
         return;
     }
-
-    const modelResponse = await processPrompt(textMessage);
-
-    if (!modelResponse) {
-        await sendReplyToWpp("Lo siento, no pude procesar tu mensaje.", from);
+    
+    try {
+        await analyzeScamAndRespond(textMessage, from);
+    } catch (error) {
+        logger.error(`Ocurrió un error al analizar y responder el mensaje: ${error}`);
         return;
     }
-
-    await sendReplyToWpp(modelResponse, from);
-
 }
