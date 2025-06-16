@@ -76,7 +76,7 @@ describe('Probando procesamiento del Prompt con OpenRouterAPI', () => {
     test('should call OpenAI API with correct parameters and return response content', async () => {
         openAIMockInstance.chat.completions.create.mockResolvedValue(fakeResponse);
 
-        const result = await processPrompt(fakePrompt);
+        const result = await processPrompt(false, fakePrompt);
 
         expect(OpenAIMock).toHaveBeenCalledWith({
             baseURL: config.openRouterBaseUrl,
@@ -106,7 +106,7 @@ describe('Probando procesamiento del Prompt con OpenRouterAPI', () => {
         };
         openAIMockInstance.chat.completions.create.mockResolvedValue(responseWithNullContent);
 
-        const result = await processPrompt(fakePrompt);
+        const result = await processPrompt(false, fakePrompt);
 
         expect(result).toBeNull();
     });
@@ -115,7 +115,7 @@ describe('Probando procesamiento del Prompt con OpenRouterAPI', () => {
         const fakeError = new Error('API error');
         openAIMockInstance.chat.completions.create.mockRejectedValue(fakeError);
 
-        const result = await processPrompt(fakePrompt);
+        const result = await processPrompt(false, fakePrompt);
 
         expect(result).toBe(JSON.stringify(fakeError));
     });
