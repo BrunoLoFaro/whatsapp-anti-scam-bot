@@ -1,7 +1,13 @@
 import sendReplyToWpp from "../../Infrastructure/whatsapp/sendReply.js";
 import processPrompt from "../../Infrastructure/openRouter/openRouter.js";
 
-export default async function analizeScamAndRespond(textMessage: string, from: string): Promise<void> {
+/**
+ * Analyzes a WhatsApp message for potential scams using an AI model and sends an appropriate response.
+ * @param textMessage - The incoming WhatsApp message text to analyze.
+ * @param from - The sender's identifier to reply to.
+ * @returns A promise that resolves when the response has been sent.
+ */
+export default async function analyzeScamAndRespond(textMessage: string, from: string): Promise<void> {
 
     const modelResponse = await processPrompt(textMessage);
 
