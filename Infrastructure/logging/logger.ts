@@ -3,10 +3,16 @@ import path from 'path';
 import winston from 'winston';
 
 const logDir = path.resolve('logs');
-if (!fs.existsSync(logDir)) {
-  fs.mkdirSync(logDir);
-}
 
+try{
+  if (!fs.existsSync(logDir)) {
+    fs.mkdirSync(logDir);
+  }
+}catch (error){
+  console.error(`No se pudo crear el directorio de logs en ${logDir}:`, error);
+  await new Promise(resolve => setTimeout(resolve, 100));
+  process.exit(1);
+}
 const logger = winston.createLogger({//TO DO: Add label to Log in a loggerCreator
   level: 'info',
   format: winston.format.combine(
