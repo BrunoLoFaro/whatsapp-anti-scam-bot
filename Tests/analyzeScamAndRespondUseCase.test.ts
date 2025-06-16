@@ -4,8 +4,8 @@ import analyzeScamAndRespond from "../Application/usecases/analizeScamAndRespond
 
 import { describe, test, jest, expect, beforeEach } from '@jest/globals'
 
-jest.mock("../../Infrastructure/whatsapp/sendReply");
-jest.mock("../../Infrastructure/openRouter/openRouter");
+jest.mock("../Infrastructure/whatsapp/sendReply");
+jest.mock("../Infrastructure/openRouter/openRouter");
 
 jest.mock('../Infrastructure/logging/logger', () => ({
     info: jest.fn(),
@@ -38,10 +38,7 @@ describe("Testeo del Caso de Uso de Analizar el Mensaje de Estafa y Responder", 
         await analyzeScamAndRespond(textMessage, from);
 
         expect(mockedProcessPrompt).toHaveBeenCalledWith(textMessage);
-        expect(mockedSendReplyToWpp).toHaveBeenCalledWith(
-            "Lo siento, no pude procesar tu mensaje.",
-            from
-        );
+        expect(mockedSendReplyToWpp).toHaveBeenCalledWith("Lo siento, no pude procesar tu mensaje.",from);
     });
 
     test("should send error message if processPrompt throws", async () => {
