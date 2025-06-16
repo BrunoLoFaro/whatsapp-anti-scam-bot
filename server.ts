@@ -1,4 +1,6 @@
 import dotenv from 'dotenv';
+dotenv.config();
+
 import express from 'express';
 import connectToMongo from './Infrastructure/database/mongo.js';
 
@@ -16,7 +18,7 @@ apiServer.use(express.json());
 apiServer.use(whatsAppWebHookRoute);
 apiServer.use(infoHealthRoute);
 
-dotenv.config();
+// dotenv.config() already called at the top
 
 logger.info('Starting server...');
 
