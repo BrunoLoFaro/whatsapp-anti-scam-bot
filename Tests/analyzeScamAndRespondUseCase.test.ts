@@ -1,6 +1,7 @@
 import sendReplyToWpp from "../Infrastructure/whatsapp/sendReply.js";
 import processPrompt from "../Infrastructure/openRouter/openRouter.js";
 import analyzeScamAndRespond from "../Application/usecases/analyzeScamAndRespondUseCase.js"
+import { IMessageReceived } from "../Application/usecases/analyzeScamAndRespondUseCase.js";
 
 import { describe, test, jest, expect, beforeEach } from '@jest/globals'
 
@@ -16,8 +17,10 @@ const mockedSendReplyToWpp = sendReplyToWpp as jest.MockedFunction<typeof sendRe
 const mockedProcessPrompt = processPrompt as jest.MockedFunction<typeof processPrompt>;
 
 describe("Testeo del Caso de Uso de Analizar el Mensaje de Estafa y Responder", () => {
-    const from = "12345";
-    const textMessage = "Test message";
+    const messageReceived: IMessageReceived = {
+        from: "12345",
+        textMessage: "Test message"
+    }
 
     beforeEach(() => {
         jest.clearAllMocks();
@@ -26,25 +29,25 @@ describe("Testeo del Caso de Uso de Analizar el Mensaje de Estafa y Responder", 
     test("should send model response if processPrompt returns a response", async () => {
         mockedProcessPrompt.mockResolvedValueOnce("AI response");
 
-        await analyzeScamAndRespond(textMessage, from);
+        await analyzeScamAndRespond(messageReceived);
 
-        expect(mockedProcessPrompt).toHaveBeenCalledWith(textMessage);
-        expect(mockedSendReplyToWpp).toHaveBeenCalledWith("AI response", from);
+        expect(mockedProcessPrompt).toHaveBeenCalledWith(messageReceived.textMessage);
+        expect(mockedSendReplyToWpp).toHaveBeenCalledWith("AI response", messageReceived.from);
     });
 
     test("should send error message if processPrompt returns null/undefined", async () => {
         mockedProcessPrompt.mockResolvedValueOnce(null as any);
 
-        await analyzeScamAndRespond(textMessage, from);
+        await analyzeScamAndRespond(messageReceived);
 
-        expect(mockedProcessPrompt).toHaveBeenCalledWith(textMessage);
-        expect(mockedSendReplyToWpp).toHaveBeenCalledWith("Lo siento, no pude procesar tu mensaje.", from);
+        expect(mockedProcessPrompt).toHaveBeenCalledWith(messageReceived.textMessage);
+        expect(mockedSendReplyToWpp).toHaveBeenCalledWith("Lo siento, no pude procesar tu mensaje.", messageReceived.from);
     });
 
     test("should send error message if processPrompt throws", async () => {
         mockedProcessPrompt.mockRejectedValueOnce(new Error("fail"));
 
-        await expect(analyzeScamAndRespond(textMessage, from)).rejects.toThrow("fail");
+        await expect(analyzeScamAndRespond(messageReceived)).rejects.toThrow("fail");
         expect(mockedSendReplyToWpp).not.toHaveBeenCalled();
     });
 });
