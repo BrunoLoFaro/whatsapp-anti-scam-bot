@@ -13,9 +13,9 @@ export interface IMessageReceived {
  * @param from - The sender's identifier to reply to.
  * @returns A promise that resolves when the response has been sent.
  */
-export default async function analyzeScamAndRespond(messageReceived: IMessageReceived): Promise<void> {
+export default async function askModelForAdvice(messageReceived: IMessageReceived): Promise<void> {
 
-    let modelResponse = await processPrompt(messageReceived.textMessage);
+    let modelResponse = await processPrompt(false, messageReceived.textMessage);
 
     let reply: IReply = {
         message: '',
