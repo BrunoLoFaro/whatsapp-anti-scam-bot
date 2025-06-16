@@ -17,6 +17,7 @@ interface configType {
     greetTemplateFlowName?: string,
     midFlowTemplateFlowName?: string,
     terminateFlowTemplateFlowName?: string,
+    errorFlowTemplateFlowName?: string
 };
 
 class Config implements configType{
@@ -34,6 +35,7 @@ class Config implements configType{
     public greetTemplateFlowName = process.env.GREET_TEMPLATE_NAME;
     public midFlowTemplateFlowName = process.env.MID_FLOW_TEMPLATE_NAME;
     public terminateFlowTemplateFlowName = process.env.TERMINATE_FLOW_TEMPLATE_NAME;
+    public errorFlowTemplateFlowName = process.env.ERROR_FLOW_TEMPLATE_NAME;
 };
 
 export default new Config();
