@@ -17,4 +17,4 @@ export default async function analyzeScamAndRespond(textMessage: string, from: s
     }
 
     await sendReplyToWpp(modelResponse, from);
-};
+}

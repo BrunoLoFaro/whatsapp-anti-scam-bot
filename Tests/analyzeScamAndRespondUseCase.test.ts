@@ -38,7 +38,7 @@ describe("Testeo del Caso de Uso de Analizar el Mensaje de Estafa y Responder", 
         await analyzeScamAndRespond(textMessage, from);
 
         expect(mockedProcessPrompt).toHaveBeenCalledWith(textMessage);
-        expect(mockedSendReplyToWpp).toHaveBeenCalledWith("Lo siento, no pude procesar tu mensaje.",from);
+        expect(mockedSendReplyToWpp).toHaveBeenCalledWith("Lo siento, no pude procesar tu mensaje.", from);
     });
 
     test("should send error message if processPrompt throws", async () => {
