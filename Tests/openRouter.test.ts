@@ -10,6 +10,8 @@ jest.mock('../config', () => ({
     openRouterBaseUrl: 'https://fake-base-url.com',
     openRouterApiKey: 'fake-api-key',
     openRouterModel: 'fake-model',
+    openRouterFallbackModel1: 'fake-fallback-model1',
+    openRouterFallbackModel2: 'fake-fallback-model2',
     promptInstructions: 'fake instructions',
 }));
 
@@ -85,6 +87,7 @@ describe('Probando procesamiento del Prompt con OpenRouterAPI', () => {
 
         expect(openAIMockInstance.chat.completions.create).toHaveBeenCalledWith({
             model: config.openRouterModel,
+            models: [`${config.openRouterFallbackModel1}, ${config.openRouterFallbackModel2}`],
             messages: [
                 { role: 'system', content: config.promptInstructions },
                 { role: 'user', content: fakePrompt },
