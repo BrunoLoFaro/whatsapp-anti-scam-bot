@@ -1,7 +1,8 @@
 import analyzeScamAndRespond from "../../Application/usecases/analyzeScamAndRespondUseCase.js";
 import logger from "../../Infrastructure/logging/logger.js";
 import { IMessageReceived } from "../../Application/usecases/analyzeScamAndRespondUseCase.js"
-import sendUserTemplate from "../../Infrastructure/whatsapp/sendTemplate.js";
+import sendTemplate from "../../Application/usecases/sendSimpleTemplateUseCase.js";
+import { IUserTemplate } from "../../Application/usecases/sendSimpleTemplateUseCase.js";
 import config from "../../config.js";
 
 interface IMessage {
@@ -14,54 +15,33 @@ interface IMessage {
     };
 }
 
-const midFlowComponents = {
-    "action": {
-      "buttons": [
-        {
-            "type": "reply",
-            "reply": {
-                "id": "advice-button",
-                "title": "Consejos Contra Estafas"
-            }
-        },
-        {
-            "type": "reply",
-            "reply": {
-                "id": "share-button",
-                "title": "Compartir con un Familiar"
-            }
-        },
-        {
-            "type": "reply",
-            "reply": {
-                "id": "terminate-button",
-                "title": "Finalizar Consulta"
-            }
-        }
-      ]
-    }
-}
-
 export default async function handleIncomingMessage(message: IMessage): Promise<void> { 
     const textMessage = message.text ? message.text.body : null
+
+    const userTemplateFlow: IUserTemplate = {
+        template: '',
+        userPhoneNumber: message.from
+    }
 
     if (!textMessage){
         return;
     }
+
+    const messageReceived: IMessageReceived = {
+        from: message.from,
+        textMessage: textMessage 
+    }
     
     try {
 
-        const messageReceived: IMessageReceived = {
-            from: message.from,
-            textMessage: textMessage 
-        }
-
         if (textMessage.match(/hola|buenos|días|tardes|buenas|noches/i)) {
-            await sendUserTemplate(config.greetTemplateFlowName ?? "seguriamigo_user_error_flow", messageReceived.from, null);
+            userTemplateFlow.template = config.greetTemplateFlowName ?? "seguriamigo_user_error_flow";
         } else {
             //await analyzeScamAndRespond(messageReceived);
-            await sendUserTemplate(config.midFlowTemplateFlowName ?? "seguriamigo_user_error_flow", messageReceived.from, midFlowComponents); 
+            userTemplateFlow.template = config.midFlowTemplateFlowName ?? "seguriamigo_user_error_flow"; 
         }
+
+        await sendTemplate(userTemplateFlow);
         
     } catch (error) {
         logger.error(`Ocurrió un error al analizar y responder el mensaje: ${error}`);
