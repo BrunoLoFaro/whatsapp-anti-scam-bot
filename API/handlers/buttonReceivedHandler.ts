@@ -25,7 +25,7 @@ export default async function handleIncomingButton(button: IButton, userPhoneNum
 
     switch (button.payload) {
         case 'ADVICE_BUTTON':
-            reply.message = 'Aguarde, Estamos analizando su mensaje...';
+            reply.message = 'Aguarde...';
             await sendUserReply(reply); 
             await askModelForAdvice(userPhoneNumber);
             userTemplateFlow.template = config.midFlowTemplateFlowName ?? "seguriamigo_user_error_flow";
