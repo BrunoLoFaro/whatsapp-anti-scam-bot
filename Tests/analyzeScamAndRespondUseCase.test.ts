@@ -31,7 +31,7 @@ describe("Testeo del Caso de Uso de Analizar el Mensaje de Estafa y Responder", 
 
         await analyzeScamAndRespond(messageReceived);
 
-        expect(mockedProcessPrompt).toHaveBeenCalledWith(messageReceived.textMessage);
+        expect(mockedProcessPrompt).toHaveBeenCalledWith(false, messageReceived.textMessage);
         expect(mockedSendReplyToWpp).toHaveBeenCalledWith("AI response", messageReceived.from);
     });
 
@@ -40,7 +40,7 @@ describe("Testeo del Caso de Uso de Analizar el Mensaje de Estafa y Responder", 
 
         await analyzeScamAndRespond(messageReceived);
 
-        expect(mockedProcessPrompt).toHaveBeenCalledWith(messageReceived.textMessage);
+        expect(mockedProcessPrompt).toHaveBeenCalledWith(false, messageReceived.textMessage);
         expect(mockedSendReplyToWpp).toHaveBeenCalledWith("Lo siento, no pude procesar tu mensaje.", messageReceived.from);
     });
 
@@ -50,4 +50,6 @@ describe("Testeo del Caso de Uso de Analizar el Mensaje de Estafa y Responder", 
         await expect(analyzeScamAndRespond(messageReceived)).rejects.toThrow("fail");
         expect(mockedSendReplyToWpp).not.toHaveBeenCalled();
     });
+
+    //TO-DO test for advice functions
 });
