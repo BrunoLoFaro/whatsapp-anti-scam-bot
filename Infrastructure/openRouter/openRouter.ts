@@ -33,7 +33,7 @@ interface OpenRouterResponse {
 }
 
 
-export default async function processPrompt(advice: boolean, prompt?: string, ): Promise<string | null> {
+export default async function processPrompt(advice: boolean, prompt?: string, ): Promise<string | null | void> {
   // This function demonstrates how to use the OpenAI API to process a prompt 
   // and return the response from the model
   let message: ChatCompletionMessageParam[] = [];
@@ -80,7 +80,6 @@ export default async function processPrompt(advice: boolean, prompt?: string, ):
 
   } catch (error) {
     logger.error(`Error processing prompt: ${JSON.stringify(error)}`);
-    return JSON.stringify(error);
   }
 
 }
