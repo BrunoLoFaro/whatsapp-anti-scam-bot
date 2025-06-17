@@ -44,7 +44,7 @@ interface IdataResponse {
   ]
 }
 
-export default async function sendUserTemplate(template: string, userPhoneNumber: string, components?: any): Promise<IapiResponse | IerrorResponse> {
+export default async function sendUserTemplate(template: string, userPhoneNumber: string): Promise<IapiResponse | IerrorResponse> {
   const options = {
     method: 'POST',
     headers: {
@@ -58,24 +58,67 @@ export default async function sendUserTemplate(template: string, userPhoneNumber
   logger.info(`Not Sanitized phone number: ${userPhoneNumber}`);
   logger.info(`Sanitized phone number: ${userPhoneNumberSanitized}`);
 
-  const data = {
-    "messaging_product": "whatsapp",
-    "recipient_type": "individual",
-    "to": `${userPhoneNumberSanitized}`,
-    "type": "template",
-    "template": {
+  let data = null;
+
+  if (template === config.greetTemplateFlowName){
+    data = {
+      "messaging_product": "whatsapp",
+      "recipient_type": "individual",
+      "to": `${userPhoneNumberSanitized}`,
+      "type": "template",
+      "template": {
         "name": `${template}`,
         "language": {
-            "code": "es_AR"
-        },
-        ...(components ? { components } : {})
+          "code": "es_AR"
+        }
+      }
     }
+  } else {
+    data = {
+      "messaging_product": "whatsapp",
+      "recipient_type": "individual",
+      "to": `${userPhoneNumberSanitized}`,
+      "type": "template",
+      "template": {
+        "name": `${template}`,
+        "language": {
+          "code": "es_AR"
+        },
+        "components": [
+          {
+            "type": "button",
+            "sub_type": "quick_reply",
+            "index": "0",
+            "parameters": [
+              { "type": "payload", "payload": "ADVICE_BUTTON" }
+            ]
+          },
+          {
+            "type": "button",
+            "sub_type": "quick_reply",
+            "index": "1",
+            "parameters": [
+              { "type": "payload", "payload": "SHARE_BUTTON" }
+            ]
+          },
+          {
+            "type": "button",
+            "sub_type": "quick_reply",
+            "index": "2",
+            "parameters": [
+              { "type": "payload", "payload": "TERMINATE_BUTTON" }
+            ]
+          }
+        ]
+      }
+    }
+
   }
 
   const url = `${config.metaBaseUrl}/v22.0/${config.ownNumberID}/messages`;
 
   try {
-    logger.info(`Sending a message flow template: ${template} to Meta API, for the number ${userPhoneNumberSanitized}...`);
+    logger.info(`Sending a message flow template: ${template} to Meta API, for the number ${userPhoneNumberSanitized}... with ${JSON.stringify(data)}`);
 
     const response: IapiResponse = await axios.post(url, data, options);
     logger.info(`Successfully sent a message flow template: ${template} to Meta API, for the number ${userPhoneNumberSanitized}`);
