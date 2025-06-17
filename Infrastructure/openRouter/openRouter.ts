@@ -43,7 +43,7 @@ export default async function processPrompt(prompt: string): Promise<string | nu
     const completion: OpenRouterResponse = await openai.chat.completions.create({
       model: `${config.openRouterModel}`,
       // @ts-expect-error -- no existe models como propiedad de la interfaz de openAi
-      models: [`${config.openRouterFallbackModel1}, ${config.openRouterFallbackModel2}`],
+      models: [`${config.openRouterFallbackModel1}`, `${config.openRouterFallbackModel2}`],
       messages: [
         {
           role: 'system',
