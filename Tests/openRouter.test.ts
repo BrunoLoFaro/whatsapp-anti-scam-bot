@@ -13,6 +13,7 @@ jest.mock('../config', () => ({
     openRouterFallbackModel1: 'fake-fallback-model1',
     openRouterFallbackModel2: 'fake-fallback-model2',
     promptInstructions: 'fake instructions',
+    promptAdviceInstructions: 'fake advice instructions',
 }));
 
 jest.mock('../Infrastructure/logging/logger', () => ({
@@ -121,6 +122,26 @@ describe('Probando procesamiento del Prompt con OpenRouterAPI', () => {
         const result = await processPrompt(false, fakePrompt);
 
         expect(result).toBe(undefined);
+    });
+
+    test('should call OpenAI API with advice flag and return response content', async () => {
+        openAIMockInstance.chat.completions.create.mockResolvedValue(fakeResponse);
+
+        const result = await processPrompt(true);
+
+        expect(OpenAIMock).toHaveBeenCalledWith({
+            baseURL: config.openRouterBaseUrl,
+            apiKey: config.openRouterApiKey,
+        });
+
+        expect(openAIMockInstance.chat.completions.create).toHaveBeenCalledWith({
+            model: config.openRouterModel,
+            messages: [
+            { role: 'user', content: config.promptAdviceInstructions },
+            ],
+        });
+
+        expect(result).toBe('Test response');
     });
 });
 
