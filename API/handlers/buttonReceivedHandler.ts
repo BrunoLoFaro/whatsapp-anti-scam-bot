@@ -1,5 +1,5 @@
 import sendTemplate from "../../Application/usecases/sendSimpleTemplateUseCase.js";
-import askModelForAdvice from "../../Application/usecases/askModelforAdviceUseCase.js";
+import askModelForAdvice from "../../Application/usecases/askModelForAdviceUseCase.js";
 import sendUserReply, { IReply } from "../../Application/usecases/sendUserReplyUseCase.js";
 import { IUserTemplate } from "../../Application/usecases/sendSimpleTemplateUseCase.js";
 import config from "../../config.js";
