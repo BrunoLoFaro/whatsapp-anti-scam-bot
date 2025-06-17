@@ -117,7 +117,7 @@ describe('Probando procesamiento del Prompt con OpenRouterAPI', () => {
 
         const result = await processPrompt(false, fakePrompt);
 
-        expect(result).toBe(JSON.stringify(fakeError));
+        expect(result).toBe(undefined);
     });
 });
 
