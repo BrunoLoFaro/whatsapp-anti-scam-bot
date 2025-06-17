@@ -60,58 +60,101 @@ export default async function sendUserTemplate(template: string, userPhoneNumber
 
   let data = null;
 
-  if (template === config.midFlowTemplateFlowName){
-    data = {
-      "messaging_product": "whatsapp",
-      "recipient_type": "individual",
-      "to": `${userPhoneNumberSanitized}`,
-      "type": "template",
-      "template": {
-        "name": `${template}`,
-        "language": {
-          "code": "es_AR"
-        },
-        "components": [
-          {
-            "type": "button",
-            "sub_type": "quick_reply",
-            "index": "0",
-            "parameters": [
-              { "type": "payload", "payload": "ADVICE_BUTTON" }
-            ]
+  switch (template) {
+    case config.midFlowTemplateFlowName:
+      data = {
+        "messaging_product": "whatsapp",
+        "recipient_type": "individual",
+        "to": `${userPhoneNumberSanitized}`,
+        "type": "template",
+        "template": {
+          "name": `${template}`,
+          "language": {
+            "code": "es_AR"
           },
-          {
-            "type": "button",
-            "sub_type": "quick_reply",
-            "index": "1",
-            "parameters": [
-              { "type": "payload", "payload": "SHARE_BUTTON" }
-            ]
-          },
-          {
-            "type": "button",
-            "sub_type": "quick_reply",
-            "index": "2",
-            "parameters": [
-              { "type": "payload", "payload": "TERMINATE_BUTTON" }
-            ]
-          }
-        ]
-      }
-    }
-  } else {
-    data = {
-      "messaging_product": "whatsapp",
-      "recipient_type": "individual",
-      "to": `${userPhoneNumberSanitized}`,
-      "type": "template",
-      "template": {
-        "name": `${template}`,
-        "language": {
-          "code": "es_AR"
+          "components": [
+            {
+              "type": "button",
+              "sub_type": "quick_reply",
+              "index": "0",
+              "parameters": [
+                { "type": "payload", "payload": "ADVICE_BUTTON" }
+              ]
+            },
+            {
+              "type": "button",
+              "sub_type": "quick_reply",
+              "index": "1",
+              "parameters": [
+                { "type": "payload", "payload": "SHARE_BUTTON" }
+              ]
+            },
+            {
+              "type": "button",
+              "sub_type": "quick_reply",
+              "index": "2",
+              "parameters": [
+                { "type": "payload", "payload": "TERMINATE_BUTTON" }
+              ]
+            }
+          ]
         }
-      }
-    }
+      };
+      break;
+    case config.greetTemplateFlowName:
+      data = {
+        "messaging_product": "whatsapp",
+        "recipient_type": "individual",
+        "to": `${userPhoneNumberSanitized}`,
+        "type": "template",
+        "template": {
+          "name": `${template}`,
+          "language": {
+            "code": "es_AR"
+          }
+        }
+      };
+      break;
+    case config.shareFlowTemplateFlowName:
+      data = {
+        "messaging_product": "whatsapp",
+        "recipient_type": "individual",
+        "to": `${userPhoneNumberSanitized}`,
+        "type": "template",
+        "template": {
+          "name": `${template}`,
+          "language": {
+        "code": "es_AR"
+          },
+          "components": [
+        {
+          "type": "body",
+          "parameters": [
+            {
+          "type": "text",
+          "parameter_name": "sus_message",
+          "text": "el mensaje sospechoso o lo que sea"
+            }
+          ]
+        }
+          ]
+        }
+      };
+      break;
+    default:
+      data = {
+        "messaging_product": "whatsapp",
+        "recipient_type": "individual",
+        "to": `${userPhoneNumberSanitized}`,
+        "type": "template",
+        "template": {
+          "name": `${template}`,
+          "language": {
+            "code": "es_AR"
+          }
+        }
+      };
+      break;
   }
 
   const url = `${config.metaBaseUrl}/v22.0/${config.ownNumberID}/messages`;
