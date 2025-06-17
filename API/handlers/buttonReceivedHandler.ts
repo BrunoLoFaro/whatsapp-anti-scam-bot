@@ -1,5 +1,6 @@
 import sendTemplate from "../../Application/usecases/sendSimpleTemplateUseCase.js";
 import askModelForAdvice from "../../Application/usecases/askModelforAdviceUseCase.js";
+import sendUserReply, { IReply } from "../../Application/usecases/sendUserReplyUseCase.js";
 import { IUserTemplate } from "../../Application/usecases/sendSimpleTemplateUseCase.js";
 import config from "../../config.js";
 
@@ -13,12 +14,22 @@ let userTemplateFlow: IUserTemplate = {
     userPhoneNumber: ''
 }
 
+let reply: IReply = {
+    message: '',
+    userPhoneNumber: ''
+}
+
 export default async function handleIncomingButton(button: IButton, userPhoneNumber: string){
     userTemplateFlow.userPhoneNumber = userPhoneNumber;
+    reply.userPhoneNumber = userPhoneNumber;
 
     switch (button.payload) {
         case 'ADVICE_BUTTON':
-            await askModelForAdvice(userPhoneNumber);            
+            reply.message = 'Aguarde, Estamos analizando su mensaje...';
+            await sendUserReply(reply); 
+            await askModelForAdvice(userPhoneNumber);
+            userTemplateFlow.template = config.midFlowTemplateFlowName ?? "seguriamigo_user_error_flow";
+            await sendTemplate(userTemplateFlow);            
             break;
         case 'SHARE_BUTTON':
             userTemplateFlow.template = config.shareFlowTemplateFlowName ?? "seguriamigo_user_error_flow";

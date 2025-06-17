@@ -34,7 +34,7 @@ export default async function handleIncomingMessage(message: IMessage): Promise<
     
     try {
 
-        if (textMessage.match(/hola|buenos|días|tardes|buenas|noches/i)) {
+        if (textMessage.match(/hola/i)) {
             userTemplateFlow.template = config.greetTemplateFlowName ?? "seguriamigo_user_error_flow";
         } else {
             //await analyzeScamAndRespond(messageReceived);
