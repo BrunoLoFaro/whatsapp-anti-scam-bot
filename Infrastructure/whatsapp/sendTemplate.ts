@@ -60,20 +60,7 @@ export default async function sendUserTemplate(template: string, userPhoneNumber
 
   let data = null;
 
-  if (template === config.greetTemplateFlowName){
-    data = {
-      "messaging_product": "whatsapp",
-      "recipient_type": "individual",
-      "to": `${userPhoneNumberSanitized}`,
-      "type": "template",
-      "template": {
-        "name": `${template}`,
-        "language": {
-          "code": "es_AR"
-        }
-      }
-    }
-  } else {
+  if (template === config.midFlowTemplateFlowName){
     data = {
       "messaging_product": "whatsapp",
       "recipient_type": "individual",
@@ -112,7 +99,19 @@ export default async function sendUserTemplate(template: string, userPhoneNumber
         ]
       }
     }
-
+  } else {
+    data = {
+      "messaging_product": "whatsapp",
+      "recipient_type": "individual",
+      "to": `${userPhoneNumberSanitized}`,
+      "type": "template",
+      "template": {
+        "name": `${template}`,
+        "language": {
+          "code": "es_AR"
+        }
+      }
+    }
   }
 
   const url = `${config.metaBaseUrl}/v22.0/${config.ownNumberID}/messages`;
