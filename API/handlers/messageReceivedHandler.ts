@@ -15,6 +15,14 @@ interface IMessage {
     };
 }
 
+function isValidMessage(text: string): boolean {
+    // Reject if only numbers or less than 5 characters
+    if (/^\d+$/.test(text.trim())) return false;
+    if (text.trim().length < 5) return false;
+    return true;
+}
+
+
 export default async function handleIncomingMessage(message: IMessage): Promise<void> { 
     const textMessage = message.text ? message.text.body : null
 
@@ -37,8 +45,13 @@ export default async function handleIncomingMessage(message: IMessage): Promise<
         if (textMessage.match(/hola/i)) {
             userTemplateFlow.template = config.greetTemplateFlowName ?? "seguriamigo_user_error_flow";
         } else {
-            //await analyzeScamAndRespond(messageReceived);
-            userTemplateFlow.template = config.midFlowTemplateFlowName ?? "seguriamigo_user_error_flow"; 
+
+            if (isValidMessage(textMessage)){
+                //await analyzeScamAndRespond(messageReceived);
+                userTemplateFlow.template = config.midFlowTemplateFlowName ?? "seguriamigo_user_error_flow"; 
+            } else {
+                userTemplateFlow.template = config.errorFlowTemplateFlowName ?? "seguriamigo_user_error_flow"; 
+            }
         }
 
         await sendTemplate(userTemplateFlow);
