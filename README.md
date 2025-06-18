@@ -82,6 +82,30 @@ Los logs de eventos e errores se guardan en la carpeta `/logs`. Se rotan automá
 
 ---
 
+## 📦 Publicación de Releases
+
+Para asegurar que los _builds_ se generen y publiquen correctamente junto con sus respectivos assets (como el ZIP del build), **las releases deben crearse directamente desde GitHub**. Esto dispara el workflow definido en el archivo [`.github/workflows/releasing.yml`](.github/workflows/releasing.yml).
+
+### Cómo Funciona el Release Workflow
+
+1. **Creación de la Release**  
+   - Cuando creas una nueva release en GitHub (usando un tag único que no exista previamente), el workflow se dispara automáticamente.
+   - **Importante:** El tag debe ser único, ya que si ya existe una release con ese tag GitHub tratará de actualizarla y podría generar errores de permisos.
+
+2. **Ejecución del Workflow**  
+   El workflow `releasing.yml` realizará los siguientes pasos:
+   - Ejecutará los tests definidos en el workflow de testing.
+   - Compilará el proyecto y comprimirá la carpeta de salida (por ejemplo, `dist`) en un archivo ZIP.
+   - Creará la release en modo _draft_ (borrador), subirá el asset generado y, finalmente, publicará la release mediante una actualización de la misma.
+
+3. **Recomendación**  
+   - Siempre crea la release desde la interfaz de GitHub o mediante la CLI (por ejemplo, usando `gh release create`) **con un tag nuevo**.
+   - De esta forma, el workflow se encargará de generar el _build_ y adjuntarlo automáticamente a la release.
+
+Con este proceso, aseguras que cada release se publique con el _build_ actualizado sin errores de permisos ni conflictos al intentar modificar una release ya existente.
+
+---
+
 ## 🌱 Flujo de trabajo con Git
 
 Usamos **GitFlow**:
