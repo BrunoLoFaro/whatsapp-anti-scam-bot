@@ -9,12 +9,14 @@ import processPrompt from "../../Infrastructure/openRouter/openRouter.js";
  */
 export default async function analyzeScamAndRespond(textMessage: string, from: string): Promise<void> {
 
-    const modelResponse = await processPrompt(textMessage);
+    let modelResponse = await processPrompt(textMessage);
 
     if (!modelResponse) {
         await sendReplyToWpp("Lo siento, no pude procesar tu mensaje.", from);
         return;
     }
+
+    modelResponse = modelResponse.replace(/\*/g, "");
 
     await sendReplyToWpp(modelResponse, from);
 }

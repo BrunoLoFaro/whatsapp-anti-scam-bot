@@ -36,12 +36,14 @@ export default async function processPrompt(prompt: string): Promise<string | nu
   // This function demonstrates how to use the OpenAI API to process a prompt 
   // and return the response from the model
 
-  logger.info(`Using model: ${config.openRouterModel}`);
+  logger.info(`Using model: ${config.openRouterModel} and Fallbacks: ${config.openRouterFallbackModel1}, ${config.openRouterFallbackModel2}`);
   logger.info(`... Processing prompt: ${prompt}`);
 
   try {
     const completion: OpenRouterResponse = await openai.chat.completions.create({
       model: `${config.openRouterModel}`,
+      // @ts-expect-error -- no existe models como propiedad de la interfaz de openAi
+      models: [`${config.openRouterFallbackModel1}`, `${config.openRouterFallbackModel2}`],
       messages: [
         {
           role: 'system',

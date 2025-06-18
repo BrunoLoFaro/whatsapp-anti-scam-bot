@@ -61,6 +61,8 @@ META_BASE_URL=https://graph.facebook.com           # URL base para la API de Met
 OPENROUTER_API_KEY=<<tu api key de openrouter>>    # Clave de API para OpenRouter
 OPENROUTER_BASE_URL=https://openrouter.ai/api/v1   # URL base de la API de OpenRouter
 OPENROUTER_MODEL=google/gemini-2.0-flash-exp:free  # Modelo de IA a utilizar
+OPENROUTER_FALLBACK_MODEL1=deepseek/deepseek-r1-0528:free  # Modelo de IA a utilizar de Backup
+OPENROUTER_FALLBACK_MODEL2=mistralai/devstral-small:free    # Modelo de IA a utilizar de Backup
 
 # PROMPT INSTRUCTIONS INJECTION
 PROMPT_INSTRUCTIONS=Necesito que evalues si el siguiente mensaje que recibi por WhatsApp que te voy a pasar podria ser un mensaje de phishing o no. No me digas si luego necesito ayuda con algo mas. Solo decime analiza el mensaje y dame tu devolucion. Hace una firma de tu modelo. Muy importante, necesitas saber que es para que lo lea una persona muy mayor de edad por lo que usa ejemplos, lenguaje claro y emojis. No uses tecnisismos ni palabras complicadas. # Instrucciones para el prompt que se enviará al modelo de IA

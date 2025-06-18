@@ -11,7 +11,9 @@ interface configType {
     openRouterApiKey?: string,
     openRouterBaseUrl?: string,
     openRouterModel?: string,
-    promptInstructions?: string
+    openRouterFallbackModel1?: string,
+    openRouterFallbackModel2?: string
+    promptInstructions?: string,
 };
 
 class Config implements configType{
@@ -24,6 +26,8 @@ class Config implements configType{
     public openRouterBaseUrl = process.env.OPENROUTER_BASE_URL;
     public openRouterModel = process.env.OPENROUTER_MODEL;
     public promptInstructions = process.env.PROMPT_INSTRUCTIONS;
+    public openRouterFallbackModel1 = process.env.OPENROUTER_FALLBACK_MODEL1;
+    public openRouterFallbackModel2 = process.env.OPENROUTER_FALLBACK_MODEL2;
 };
 
 export default new Config();
