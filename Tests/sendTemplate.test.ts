@@ -9,6 +9,13 @@ jest.mock('../Infrastructure/logging/logger.js', () => ({
   info: jest.fn(),
   error: jest.fn(),
 }));
+jest.mock('../config', () => ({
+  greetTemplateFlowName: 'fake_greet_template',
+  midFlowTemplateFlowName: 'fake_mid_flow_template',
+  terminateFlowTemplateFlowName: 'fake_terminate_template',
+  errorFlowTemplateFlowName: 'fake_error_template',
+  shareFlowTemplateFlowName: 'fake_share_template'
+}));
 
 const mockPost = axios.post as jest.MockedFunction<typeof axios.post>;
 

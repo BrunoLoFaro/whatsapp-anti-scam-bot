@@ -13,7 +13,7 @@ interface configType {
     openRouterModel?: string,
     openRouterFallbackModel1?: string,
     openRouterFallbackModel2?: string
-    promptInstructions?: string,,
+    promptInstructions?: string,
     promptAdviceInstructions?: string,
     greetTemplateFlowName?: string,
     midFlowTemplateFlowName?: string,
