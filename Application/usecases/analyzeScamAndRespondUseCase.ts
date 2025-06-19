@@ -25,8 +25,6 @@ export default async function analyzeScamAndRespond(messageReceived: IMessageRec
     if (!modelResponse) {
         reply.message = "Lo siento, no pude procesar tu mensaje.";
         await sendUserReply(reply);
-        reply.message = "Lo siento, no pude procesar tu mensaje.";
-        await sendUserReply(reply);
         return;
     }
 
