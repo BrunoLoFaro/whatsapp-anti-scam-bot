@@ -39,7 +39,7 @@ export default async function handleIncomingButton(button: IButton, userPhoneNum
             userTemplateFlow.template = config.shareFlowTemplateFlowName ?? "seguriamigo_user_error_flow";
             await sendTemplate(userTemplateFlow);
 
-            userTemplateFlow.template = config.terminateFlowTemplateFlowName ?? "seguriamigo_user_error_flow";
+            userTemplateFlow.template = config.midFlowTemplateFlowName ?? "seguriamigo_user_error_flow";
             await sendTemplate(userTemplateFlow);
 
             break;
