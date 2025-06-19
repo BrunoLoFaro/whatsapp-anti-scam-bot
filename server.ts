@@ -1,10 +1,13 @@
-import dotenv from "dotenv";
-import express from "express";
-import connectToMongo from "./Infrastructure/database/mongo.js";
+import dotenv from 'dotenv';
+dotenv.config();
 
-import logger from "./Infrastructure/logging/logger.js";
-import config from "./config.js";
-import whatsAppWebHookRoute from "./API/routes/webhook.route.js";
+import express from 'express';
+import connectToMongo from './Infrastructure/database/mongo.js';
+
+import logger from './Infrastructure/logging/logger.js';
+import config from './config.js'
+import whatsAppWebHookRoute from './API/routes/webhook.route.js';
+import infoHealthRoute from './API/routes/info.health.route.js';
 
 const apiServer = express();
 
@@ -13,8 +16,9 @@ apiServer.use(express.json());
 
 //Routes
 apiServer.use(whatsAppWebHookRoute);
+apiServer.use(infoHealthRoute);
 
-dotenv.config();
+// dotenv.config() already called at the top
 
 logger.info("Starting server...");
 

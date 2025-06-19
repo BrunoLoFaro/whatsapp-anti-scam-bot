@@ -61,6 +61,8 @@ META_BASE_URL=https://graph.facebook.com           # URL base para la API de Met
 OPENROUTER_API_KEY=<<tu api key de openrouter>>    # Clave de API para OpenRouter
 OPENROUTER_BASE_URL=https://openrouter.ai/api/v1   # URL base de la API de OpenRouter
 OPENROUTER_MODEL=google/gemini-2.0-flash-exp:free  # Modelo de IA a utilizar
+OPENROUTER_FALLBACK_MODEL1=deepseek/deepseek-r1-0528:free  # Modelo de IA a utilizar de Backup
+OPENROUTER_FALLBACK_MODEL2=mistralai/devstral-small:free    # Modelo de IA a utilizar de Backup
 
 # PROMPT INSTRUCTIONS INJECTION
 PROMPT_INSTRUCTIONS=Necesito que evalues si el siguiente mensaje que recibi por WhatsApp que te voy a pasar podria ser un mensaje de phishing o no. No me digas si luego necesito ayuda con algo mas. Solo decime analiza el mensaje y dame tu devolucion. Hace una firma de tu modelo. Muy importante, necesitas saber que es para que lo lea una persona muy mayor de edad por lo que usa ejemplos, lenguaje claro y emojis. No uses tecnisismos ni palabras complicadas. # Instrucciones para el prompt que se enviará al modelo de IA
@@ -77,6 +79,30 @@ Si hacen algun cambio, al guardarlo se recompila e inicia solo.
 ## 📄 Logs
 
 Los logs de eventos e errores se guardan en la carpeta `/logs`. Se rotan automáticamente y muestran los mensajes recibidos y enviados.
+
+---
+
+## 📦 Publicación de Releases
+
+Para asegurar que los _builds_ se generen y publiquen correctamente junto con sus respectivos assets (como el ZIP del build), **las releases deben crearse directamente desde GitHub**. Esto dispara el workflow definido en el archivo [`.github/workflows/releasing.yml`](.github/workflows/releasing.yml).
+
+### Cómo Funciona el Release Workflow
+
+1. **Creación de la Release**  
+   - Cuando creas una nueva release en GitHub (usando un tag único que no exista previamente), el workflow se dispara automáticamente.
+   - **Importante:** El tag debe ser único, ya que si ya existe una release con ese tag GitHub tratará de actualizarla y podría generar errores de permisos.
+
+2. **Ejecución del Workflow**  
+   El workflow `releasing.yml` realizará los siguientes pasos:
+   - Ejecutará los tests definidos en el workflow de testing.
+   - Compilará el proyecto y comprimirá la carpeta de salida (por ejemplo, `dist`) en un archivo ZIP.
+   - Creará la release en modo _draft_ (borrador), subirá el asset generado y, finalmente, publicará la release mediante una actualización de la misma.
+
+3. **Recomendación**  
+   - Siempre crea la release desde la interfaz de GitHub o mediante la CLI (por ejemplo, usando `gh release create`) **con un tag nuevo**.
+   - De esta forma, el workflow se encargará de generar el _build_ y adjuntarlo automáticamente a la release.
+
+Con este proceso, aseguras que cada release se publique con el _build_ actualizado sin errores de permisos ni conflictos al intentar modificar una release ya existente.
 
 ---
 
