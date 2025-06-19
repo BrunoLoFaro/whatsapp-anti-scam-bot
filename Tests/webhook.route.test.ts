@@ -1,8 +1,9 @@
 import request from 'supertest';
 import express from 'express';
-import router from '../API/routes/webhook.route'; // Ajusta la ruta
+import router from '../API/routes/webhook.route.js'; // Ajusta la ruta
 import config from '../config.js';
-import handleIncomingMessage from '../API/handlers/messageReceivedHandler';
+import handleIncomingMessage from '../API/handlers/messageReceivedHandler.js';
+import handleIncomingButton from '../API/handlers/buttonReceivedHandler.js';
 
 import logger from '../Infrastructure/logging/logger.js';
 
@@ -14,6 +15,11 @@ jest.mock('../config', () => ({
 }));
 
 jest.mock('../API/handlers/messageReceivedHandler', () => ({
+  __esModule: true,
+  default: jest.fn()
+}));
+
+jest.mock('../API/handlers/buttonReceivedHandler', () => ({
   __esModule: true,
   default: jest.fn()
 }));
