@@ -1,4 +1,5 @@
 import sendUserReply from "./sendUserReplyUseCase.js";
+import sendUserReply from "./sendUserReplyUseCase.js";
 import processPrompt from "../../Infrastructure/openRouter/openRouter.js";
 import { IReply } from "./sendUserReplyUseCase.js"
 
@@ -23,6 +24,8 @@ export default async function analyzeScamAndRespond(messageReceived: IMessageRec
     }       
 
     if (!modelResponse) {
+        reply.message = "Lo siento, no pude procesar tu mensaje.";
+        await sendUserReply(reply);
         reply.message = "Lo siento, no pude procesar tu mensaje.";
         await sendUserReply(reply);
         return;

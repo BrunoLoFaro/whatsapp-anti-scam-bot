@@ -1,5 +1,6 @@
 import OpenAI from 'openai';
 import type { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
+import type { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
 import config from '../../config.js';
 import logger from '../logging/logger.js';
 
@@ -34,8 +35,10 @@ interface OpenRouterResponse {
 
 
 export default async function processPrompt(advice: boolean, prompt?: string, ): Promise<string | null | void> {
+export default async function processPrompt(advice: boolean, prompt?: string, ): Promise<string | null | void> {
   // This function demonstrates how to use the OpenAI API to process a prompt 
   // and return the response from the model
+  let message: ChatCompletionMessageParam[] = [];
   let message: ChatCompletionMessageParam[] = [];
 
   logger.info(`Using model: ${config.openRouterModel} and Fallbacks: ${config.openRouterFallbackModel1}, ${config.openRouterFallbackModel2}`);
