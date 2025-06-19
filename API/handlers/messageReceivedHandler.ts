@@ -4,6 +4,7 @@ import { IMessageReceived } from "../../Application/usecases/analyzeScamAndRespo
 import sendTemplate from "../../Application/usecases/sendSimpleTemplateUseCase.js";
 import { IUserTemplate } from "../../Application/usecases/sendSimpleTemplateUseCase.js";
 import config from "../../config.js";
+import sendUserReply, { IReply } from "../../Application/usecases/sendUserReplyUseCase.js";
 
 interface IMessage {
     from: string; // Número remitente (debe coincidir con wa_id)
@@ -31,6 +32,11 @@ export default async function handleIncomingMessage(message: IMessage): Promise<
         userPhoneNumber: message.from
     }
 
+    let reply: IReply = {
+        message: '',
+        userPhoneNumber: message.from
+    }
+
     if (!textMessage){
         return;
     }
@@ -47,7 +53,11 @@ export default async function handleIncomingMessage(message: IMessage): Promise<
         } else {
 
             if (isValidMessage(textMessage)){
-                //await analyzeScamAndRespond(messageReceived);
+                reply.message = 'Aguarde mientras su mensaje es procesado...';
+                await sendUserReply(reply);
+
+               await analyzeScamAndRespond(messageReceived);
+
                 userTemplateFlow.template = config.midFlowTemplateFlowName ?? "seguriamigo_user_error_flow"; 
             } else {
                 userTemplateFlow.template = config.errorFlowTemplateFlowName ?? "seguriamigo_user_error_flow"; 
