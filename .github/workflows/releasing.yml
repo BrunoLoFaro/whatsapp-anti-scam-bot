@@ -1,14 +1,20 @@
-name: Build on Release
+name: Build and Draft Release
 
 on:
-  release:
-    types: [prereleased, released]
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Tag name (ej: v1.2.3)'
+        required: true
+
+permissions:
+  contents: write
 
 jobs:
   run_tests:
     uses: ./.github/workflows/testing.yml
 
-  build:
+  build_and_release:
     needs: run_tests
     runs-on: ubuntu-latest
     steps:
@@ -28,10 +34,12 @@ jobs:
       - name: Compress build folder
         run: zip -r build-output.zip dist # Comprime la carpeta de salida
 
-      - name: Upload Release Asset
+      - name: Create Draft Release and Upload Asset
         uses: softprops/action-gh-release@v2
         with:
-          files: build-output.zip # Sube el archivo comprimido como asset del release
+          tag_name: ${{ github.event.inputs.tag_name }}
+          draft: true
+          files: build-output.zip
         env:
 
           # Este valor utiliza el token de autenticación proporcionado automáticamente por GitHub Actions a través del workspace.

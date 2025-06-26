@@ -44,7 +44,7 @@ interface IdataResponse {
   ]
 }
 
-export default async function sendReplyToWpp(message: string, userPhoneNumber: string ): Promise<IapiResponse | IerrorResponse> {
+export default async function sendReplyToWpp(message: string, userPhoneNumber: string): Promise<IapiResponse | IerrorResponse> {
   const options = {
     method: 'POST',
     headers: {

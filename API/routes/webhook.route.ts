@@ -3,6 +3,7 @@ import config from '../../config.js';
 import logger from '../../Infrastructure/logging/logger.js';
 
 import handleIncomingMessage from '../handlers/messageReceivedHandler.js';
+import handleIncomingButton from '../handlers/buttonReceivedHandler.js';
 
 const router = Router();
 
@@ -97,6 +98,14 @@ router.post('/api/webhook', function(req, res) {
 
   const message = entry[0].changes[0].value.messages ? entry[0].changes[0].value.messages[0] : null;
   const status = entry[0].changes[0].value.statuses ?  entry[0].changes[0].value.statuses[0] : null;
+  const button = message?.button?.payload ?? null;
+
+  if (button){
+    res.status(200).send();
+    logger.info(`Boton recibido: ${JSON.stringify(message.button)}`);
+    handleIncomingButton(message.button, message.from);
+    return;
+  }
 
   if (message){
     res.status(200).send();
@@ -113,12 +122,6 @@ router.post('/api/webhook', function(req, res) {
   }
 
   res.status(401).send();
-});
-
-router.get('/api/health', function(req, res) {
-    res.status(200).send();
-    logger.info(`Health ejecutado`);
-    return;
 });
 
 export default router;
