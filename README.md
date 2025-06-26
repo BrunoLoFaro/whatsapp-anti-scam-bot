@@ -66,6 +66,11 @@ OPENROUTER_FALLBACK_MODEL2=mistralai/devstral-small:free    # Modelo de IA a uti
 
 # PROMPT INSTRUCTIONS INJECTION
 PROMPT_INSTRUCTIONS=Necesito que evalues si el siguiente mensaje que recibi por WhatsApp que te voy a pasar podria ser un mensaje de phishing o no. No me digas si luego necesito ayuda con algo mas. Solo decime analiza el mensaje y dame tu devolucion. Hace una firma de tu modelo. Muy importante, necesitas saber que es para que lo lea una persona muy mayor de edad por lo que usa ejemplos, lenguaje claro y emojis. No uses tecnisismos ni palabras complicadas. # Instrucciones para el prompt que se enviará al modelo de IA
+
+# USER MESSAGE FLOWS WHATSAPP TEMPLATE IDS
+GREET_TEMPLATE_NAME=<<nombre en Wpp Business>> 
+MID_FLOW_TEMPLATE_NAME=<<nombre en Wpp Business>>  
+TERMINATE_FLOW_TEMPLATE_NAME=<<nombre en Wpp Business>> 
 ```
 4. **correr el proyecto**
 ```bash
