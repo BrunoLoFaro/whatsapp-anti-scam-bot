@@ -1,13 +1,14 @@
-import { PermissionDeniedError } from "openai";
 import redisClient from "./redisClient";
 
 export enum UserState {
     NEW = 'NEW',
     GREETED = 'GREETED',
+    MIDFLOW = 'MIDFLOW'
 }
 
 export interface userField {
-    state: UserState | UserState.NEW,
+    phoneNumber: string, 
+    state?: UserState,
     receivedMessage?: string
 }
 
@@ -19,9 +20,10 @@ export interface userField {
 
 export class UserRepository {
     private static instance: UserRepository;
+    private redisClient;
 
     private constructor() {
-
+        this.redisClient = redisClient;
     }
 
     public static getInstance(): UserRepository {
@@ -31,24 +33,41 @@ export class UserRepository {
         return this.instance;
     }
 
-    private getUserKey(userPhoneNumber: string): string{
-        return `userState: ${userPhoneNumber}`;
+    public async createUser(user: userField): Promise<void> {
+        const key = `user:${user.phoneNumber}`;
+        await this.redisClient.hSet(key, {
+            state: user.state ?? UserState.NEW
+        });
+        // el usuario expira en 5 minutos
+        await this.redisClient.expire(key, 300);
+    }
+
+    public async updateUser(user: userField): Promise<void> {
+        if (!user.receivedMessage) {
+            return;
+        }
+        const key = `user:${user.phoneNumber}`;
+        await this.redisClient.hSet(key, {
+            state: user.state || UserState.GREETED,
+            message: user.receivedMessage
+        });
+    }
+
+    public async deleteUser(user: userField): Promise<void> {
+        const key = `user:${user.phoneNumber}`;
+        await this.redisClient.del(key);
+    }
+
+    public async retrieveUserState(userPhoneNumber: string): Promise<String | null> {
+        const key = `user:${userPhoneNumber}`;
+        const userState: String | null = await this.redisClient.hGet(key, 'state');
+        return userState;        
+    }
+
+    public async retrieveUserReceivedMessage(userPhoneNumber: string): Promise<String | null> {
+        const key = `user:${userPhoneNumber}`;
+        const userReceivedMessage: String | null = await this.redisClient.hGet(key, 'message');
+        return userReceivedMessage;     
     } 
-
-    async getUserState(userPhoneNumber: string): Promise<UserState> {
-        const userState = await redisClient.get(this.getUserKey(userPhoneNumber));
-        return (userState as UserState) || UserState.NEW;
-    }
-
-    async setUserState(userPhoneNumber: string, state: UserState){
-        await redisClient.setEx(this.getUserKey(userPhoneNumber), 3600, state);
-    }
-
-    async clearUserState(userPhoneNumber: string): Promise<void> {
-        await redisClient.del(this.getUserKey(userPhoneNumber));
-    }
-
-
- 
 
 }

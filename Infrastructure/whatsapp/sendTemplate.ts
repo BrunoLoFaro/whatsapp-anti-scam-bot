@@ -10,6 +10,7 @@ import axios from 'axios';
 import logger from '../logging/logger.js';
 
 import config from '../../config.js';
+import { UserRepository } from '../database/userRepository.js';
 
 
 interface IapiResponse {
@@ -59,6 +60,8 @@ export default async function sendUserTemplate(template: string, userPhoneNumber
   logger.info(`Sanitized phone number: ${userPhoneNumberSanitized}`);
 
   let data = null;
+
+  const phishingMessage = UserRepository.getInstance().retrieveUserReceivedMessage(userPhoneNumber);
 
   switch (template) {
     case config.midFlowTemplateFlowName:
@@ -133,7 +136,7 @@ export default async function sendUserTemplate(template: string, userPhoneNumber
             {
           "type": "text",
           "parameter_name": "sus_message",
-          "text": "el mensaje sospechoso o lo que sea"
+          "text": `${phishingMessage}`
             }
           ]
         }

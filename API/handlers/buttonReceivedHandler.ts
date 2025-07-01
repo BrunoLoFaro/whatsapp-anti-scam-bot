@@ -3,6 +3,8 @@ import askModelForAdvice from "../../Application/usecases/askModelForAdviceUseCa
 import sendUserReply, { IReply } from "../../Application/usecases/sendUserReplyUseCase.js";
 import { IUserTemplate } from "../../Application/usecases/sendSimpleTemplateUseCase.js";
 import config from "../../config.js";
+import logger from "../../Infrastructure/logging/logger.js";
+import { UserRepository } from "../../Infrastructure/database/userRepository.js";
 
 interface IButton {
     payload: string,
@@ -48,10 +50,19 @@ export default async function handleIncomingButton(button: IButton, userPhoneNum
             userTemplateFlow.template = config.terminateFlowTemplateFlowName ?? "seguriamigo_user_error_flow";
             
             await sendTemplate(userTemplateFlow);
-            
+
+            logger.info(`Conversacion terminada con: ${userPhoneNumber} procesando baja en BD Redis...`);
+            UserRepository.getInstance().deleteUser({phoneNumber: userPhoneNumber});
+            logger.info(`Baja de: ${userPhoneNumber} procesada con exito!`);
+
             break;
     
         default:
+
+            userTemplateFlow.template = config.errorFlowTemplateFlowName ?? "seguriamigo_user_error_flow"; 
+            reply.message = 'Por favor elija una opcion mediante el pulsador de botones...';
+            await sendUserReply(reply);
+                
             break;
     }
 }
