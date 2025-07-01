@@ -51,6 +51,7 @@ Crear un archivo `.env` en la raíz con:
 PORT=3000                            # Puerto en el que corre el servidor local
 WHATSAPP_TOKEN=<<token temporal>>    # Token de acceso generado por Meta
 PHONE_NUMBER_ID=<<número de prueba>> # ID del número en el entorno sandbox
+REDIS_URI=<<string de conexion a la BD Redis>> #Ubicacion donde se encuentra corriendo la BD de Redis
 
 # SAME AS DEV.META >> WHATSAPP >> WEBHOOK
 MY_WHATSAPP_TOKEN=<<token configurado en WhatsApp -> Webhook >>
