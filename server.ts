@@ -2,7 +2,6 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import express from 'express';
-import connectToMongo from './Infrastructure/database/mongo.js';
 
 import logger from './Infrastructure/logging/logger.js';
 import config from './config.js'
@@ -44,7 +43,6 @@ if (propiedadesFaltantes.length > 0) {
   process.exit(1);
 }
 
-await connectToMongo();
 
 apiServer.listen(config.webPort, function () {
   logger.info(`API Server listening on Port ${config.webPort} ...`);
