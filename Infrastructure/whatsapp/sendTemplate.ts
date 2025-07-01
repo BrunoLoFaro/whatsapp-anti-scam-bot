@@ -80,8 +80,10 @@ export default async function sendUserTemplate(template: string, userPhoneNumber
   let data = null;
 
   let phishingMessage = await UserRepository.getInstance().retrieveUserReceivedMessage(userPhoneNumber);
-  if (phishingMessage){
+  if (phishingMessage) {
     phishingMessage = sanitizeParamText(phishingMessage);
+  } else {
+    phishingMessage = "";
   }
 
   switch (template) {

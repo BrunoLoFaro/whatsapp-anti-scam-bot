@@ -52,7 +52,7 @@ export default async function handleIncomingButton(button: IButton, userPhoneNum
             await sendTemplate(userTemplateFlow);
 
             logger.info(`Conversacion terminada con: ${userPhoneNumber} procesando baja en BD Redis...`);
-            UserRepository.getInstance().deleteUser({phoneNumber: userPhoneNumber});
+            await UserRepository.getInstance().deleteUser({phoneNumber: userPhoneNumber});
             logger.info(`Baja de: ${userPhoneNumber} procesada con exito!`);
 
             break;
