@@ -1,3 +1,4 @@
+import { PermissionDeniedError } from "openai";
 import redisClient from "./redisClient";
 
 export enum UserState {
@@ -5,10 +6,16 @@ export enum UserState {
     GREETED = 'GREETED',
 }
 
-interface userField {
+export interface userField {
     state: UserState | UserState.NEW,
     receivedMessage?: string
 }
+
+// IMPLEMENTAR ESTO DE MANERA TAL QUE 
+// SE PUEDA MANEJAR LOS ESTADOS DEL USUARIO
+// Y VERIFICAR QUE BOTON PRESIONO PARA 
+// MANDARLE NUEVAMNETE LA LISTA DE BOTONES
+// SIN EL BOTON QUE PRESIONO
 
 export class UserRepository {
     private static instance: UserRepository;
