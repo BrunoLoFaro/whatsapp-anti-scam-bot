@@ -9,17 +9,15 @@ Este proyecto es un backend en Node.js que se conecta con la API de WhatsApp Bus
 - Node.js 22.x o superior 
 - npm (v9+)  
 - Visual Studio Code  
-```bash
 - Cuenta en [https://developers.facebook.com](https://developers.facebook.com) con perfil de desarrollador activado
 - Número de prueba aprobado en el entorno sandbox de WhatsApp Cloud API
-
+  
 ---
-
 ## ⚙️ Uso de Redis
 
-Utilizamos Redis para el manejo de estados de usuario. Redis es una base de datos en memoria, volátil y de alta velocidad que almacena temporalmente el estado y el mensaje de Phishing que envio cada usuario. Cada clave de usuario se expira automáticamente a los **5 minutos**, lo que garantiza la limpieza de datos antiguos y previene el consumo excesivo de memoria.
+Utilizamos Redis para el manejo de estados de usuario. Redis es una base de datos en memoria, volátil y de alta velocidad que almacena temporalmente el estado y el mensaje de Phishing que envio cada usuario. Cada clave de usuario se expira automáticamente a los 5 minutos, lo que garantiza la limpieza de datos antiguos y previene el consumo excesivo de memoria.
 
----  
+---
 
 ## 📁 Estructura del proyecto
 
