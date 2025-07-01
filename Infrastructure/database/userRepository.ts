@@ -1,4 +1,4 @@
-import redisClient from "./redisClient";
+import redisClient from "./redisClient.js";
 
 export enum UserState {
     NEW = 'NEW',
