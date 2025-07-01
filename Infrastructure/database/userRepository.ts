@@ -43,13 +43,10 @@ export class UserRepository {
     }
 
     public async updateUser(user: userField): Promise<void> {
-        if (!user.receivedMessage) {
-            return;
-        }
         const key = `user:${user.phoneNumber}`;
         await this.redisClient.hSet(key, {
-            state: user.state || UserState.GREETED,
-            message: user.receivedMessage
+            state: user.state ?? UserState.GREETED,
+            message: user.receivedMessage ?? ''
         });
     }
 

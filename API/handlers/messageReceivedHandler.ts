@@ -50,6 +50,8 @@ export default async function handleIncomingMessage(message: IMessage): Promise<
     try {
 
         const userState = await UserRepository.getInstance().retrieveUserState(message.from);
+        
+        console.log(`EL ESTADO ES: ${userState}`);
 
         switch (userState) {
             case null:
@@ -58,10 +60,12 @@ export default async function handleIncomingMessage(message: IMessage): Promise<
                 logger.info(`Usuario no encontrado: ${messageReceived.from} en la BD Redis, Procesando Creacion ...`); 
 
                 UserRepository.getInstance().createUser({phoneNumber: messageReceived.from})
-                logger.info(`Creado usuario: ${messageReceived.from} en la BD Redis con Exito`);                
+                logger.info(`Creado usuario: ${messageReceived.from} en la BD Redis con Exito`);
+                
+                
 
                 UserRepository.getInstance().updateUser({phoneNumber: messageReceived.from, state: UserState.GREETED});
-                logger.info(`Usuario: ${messageReceived.from} transiciono a estado GREETED con Exito`);
+                logger.info(`Usuario: ${messageReceived.from} transiciono a estado ${UserState.GREETED} con Exito`);
                 break;
             
             case 'GREETED':
@@ -70,7 +74,7 @@ export default async function handleIncomingMessage(message: IMessage): Promise<
                 if (isValidMessage(textMessage)){
                     reply.message = 'Aguarde mientras su mensaje es procesado...';
                     await sendUserReply(reply);
-                    await analyzeScamAndRespond(messageReceived);
+                    //await analyzeScamAndRespond(messageReceived);
                     userTemplateFlow.template = config.midFlowTemplateFlowName ?? "seguriamigo_user_error_flow";
 
                     UserRepository.getInstance().updateUser({phoneNumber: message.from, state: UserState.MIDFLOW, receivedMessage: textMessage});                    

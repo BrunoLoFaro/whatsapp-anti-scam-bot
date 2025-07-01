@@ -45,6 +45,13 @@ interface IdataResponse {
   ]
 }
 
+function sanitizeParamText(text: String): String {
+  return text
+    .replace(/[\n\r\t]/g, " ")         // Reemplaza \n, \r, \t por espacio
+    .replace(/ {5,}/g, "    ")         // Limita a 4 espacios seguidos
+    .trim();
+}
+
 export default async function sendUserTemplate(template: string, userPhoneNumber: string): Promise<IapiResponse | IerrorResponse> {
   const options = {
     method: 'POST',
@@ -61,7 +68,10 @@ export default async function sendUserTemplate(template: string, userPhoneNumber
 
   let data = null;
 
-  const phishingMessage = UserRepository.getInstance().retrieveUserReceivedMessage(userPhoneNumber);
+  let phishingMessage = await UserRepository.getInstance().retrieveUserReceivedMessage(userPhoneNumber);
+  if (phishingMessage){
+    phishingMessage = sanitizeParamText(phishingMessage);
+  }
 
   switch (template) {
     case config.midFlowTemplateFlowName:
