@@ -46,10 +46,21 @@ interface IdataResponse {
 }
 
 function sanitizeParamText(text: String): String {
-  return text
-    .replace(/[\n\r\t]/g, " ")         // Reemplaza \n, \r, \t por espacio
-    .replace(/ {5,}/g, "    ")         // Limita a 4 espacios seguidos
+  const MAX_TOTAL = 1024;
+  const FIXED_TEXT_LENGTH = 552; // <-- contado desde la plantilla
+  const MAX_PARAM_LENGTH = MAX_TOTAL - FIXED_TEXT_LENGTH;
+
+  let cleaned = text
+    .replace(/[\n\r\t]/g, " ")
+    .replace(/ {5,}/g, "    ")
     .trim();
+
+  if (cleaned.length > MAX_PARAM_LENGTH) {
+    cleaned = cleaned.slice(0, MAX_PARAM_LENGTH - 3) + "...";
+    logger.warn(`El mensaje fue recortado para cumplir politicas de Meta!`);
+  }
+
+  return cleaned;
 }
 
 export default async function sendUserTemplate(template: string, userPhoneNumber: string): Promise<IapiResponse | IerrorResponse> {
