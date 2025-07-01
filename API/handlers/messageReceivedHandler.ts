@@ -74,7 +74,7 @@ export default async function handleIncomingMessage(message: IMessage): Promise<
                 if (isValidMessage(textMessage)){
                     reply.message = 'Aguarde mientras su mensaje es procesado...';
                     await sendUserReply(reply);
-                    //await analyzeScamAndRespond(messageReceived);
+                    await analyzeScamAndRespond(messageReceived);
                     userTemplateFlow.template = config.midFlowTemplateFlowName ?? "seguriamigo_user_error_flow";
 
                     UserRepository.getInstance().updateUser({phoneNumber: message.from, state: UserState.MIDFLOW, receivedMessage: textMessage});                    
