@@ -15,11 +15,17 @@ jest.mock('../Infrastructure/database/redisClient', () => ({
 }));
 
 // Mock del logger, aunque no se use directamente en el repositorio, es una buena práctica
-jest.mock('../Infrastructure/logging/logger');
-jest.mock('../config', () => ({
-    redisUri: 'redis://localhost:6379',
+jest.mock('../Infrastructure/logging/logger.js', () => ({
+  __esModule: true,
+  default: {
+    info: jest.fn(),
+    error: jest.fn()
+  }
 }));
-
+jest.mock('../config.js', () => ({
+  __esModule: true,
+  default: { redisUri: 'redis://localhost:6379' }
+}));
 
 // Creamos un alias tipado para el cliente mockeado
 const mockRedisClient = redisClient as jest.Mocked<typeof redisClient>;
