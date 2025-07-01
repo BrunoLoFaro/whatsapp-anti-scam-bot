@@ -44,10 +44,22 @@ export class UserRepository {
 
     public async updateUser(user: userField): Promise<void> {
         const key = `user:${user.phoneNumber}`;
-        await this.redisClient.hSet(key, {
-            state: user.state ?? UserState.GREETED,
-            message: user.receivedMessage ?? ''
-        });
+        const fieldsToUpdate: Record<string, string> = {};
+
+        if (user.state !== undefined) {
+            fieldsToUpdate.state = user.state.toString();
+        }
+
+        if (user.receivedMessage !== undefined) {
+            fieldsToUpdate.message = user.receivedMessage;
+        }
+
+        if (Object.keys(fieldsToUpdate).length === 0) {
+            // No hay nada para actualizar
+            return;
+        }
+
+        await this.redisClient.hSet(key, fieldsToUpdate);
     }
 
     public async deleteUser(user: userField): Promise<void> {

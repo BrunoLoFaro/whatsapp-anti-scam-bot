@@ -92,7 +92,7 @@ describe('UserRepository', () => {
 
         await userRepository.updateUser(userWithoutMessage);
 
-        expect(mockRedisClient.hSet).not.toHaveBeenCalled();
+        expect(mockRedisClient.hSet).toHaveBeenCalledWith("user:123456789", { state: "GREETED" });
     });
 
     test('debería eliminar un usuario', async () => {
