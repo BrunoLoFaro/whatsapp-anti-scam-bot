@@ -30,6 +30,12 @@ logs/                  → Carpeta donde se guardan los logs locales
 
 ---
 
+## ⚙️ Uso de Redis
+
+Utilizamos Redis para el manejo de estados de usuario. Redis es una base de datos en memoria, volátil y de alta velocidad que almacena temporalmente el estado y el mensaje de Phishing que envio cada usuario. Cada clave de usuario se expira automáticamente a los **5 minutos**, lo que garantiza la limpieza de datos antiguos y previene el consumo excesivo de memoria.
+
+---  
+
 ## ▶️ Pasos para ejecutar el proyecto
 
 1. **Clonar el repositorio**
@@ -51,7 +57,7 @@ Crear un archivo `.env` en la raíz con:
 PORT=3000                            # Puerto en el que corre el servidor local
 WHATSAPP_TOKEN=<<token temporal>>    # Token de acceso generado por Meta
 PHONE_NUMBER_ID=<<número de prueba>> # ID del número en el entorno sandbox
-REDIS_URI=<<string de conexion a la BD Redis>> #Ubicacion donde se encuentra corriendo la BD de Redis
+REDIS_URI=<<redis://localhost:6379>> #Ubicacion donde se encuentra corriendo la BD de Redis
 
 # SAME AS DEV.META >> WHATSAPP >> WEBHOOK
 MY_WHATSAPP_TOKEN=<<token configurado en WhatsApp -> Webhook >>
