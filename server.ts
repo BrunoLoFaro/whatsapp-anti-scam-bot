@@ -1,51 +1,66 @@
 import dotenv from 'dotenv';
-dotenv.config();
+
 
 import express from 'express';
-import connectToMongo from './Infrastructure/database/mongo.js';
-
-import logger from './Infrastructure/logging/logger.js';
+import logger, { initializeLogger } from './Infrastructure/logging/logger.js'; // Importa la función de inicialización
+import { connectRedis } from './Infrastructure/database/redisClient.js'; // Importa la función de inicialización
 import config from './config.js'
 import whatsAppWebHookRoute from './API/routes/webhook.route.js';
 import infoHealthRoute from './API/routes/info.health.route.js';
 
-const apiServer = express();
 
-//Middleware
-apiServer.use(express.json());
+async function startServer() {
+  try {
+    dotenv.config();
+    await initializeLogger();
 
-//Routes
-apiServer.use(whatsAppWebHookRoute);
-apiServer.use(infoHealthRoute);
+    const configPropiedades = Object.entries(config);
+    const propiedadesFaltantes = configPropiedades.filter(([clave, valor]) => valor === undefined || valor === null || valor === "");
 
-// dotenv.config() already called at the top
+    if (propiedadesFaltantes.length > 0) {
+      propiedadesFaltantes.forEach(([clave]) => {
+        logger.error(`CONFIG ERROR: La propiedad '${clave}' no está definida en el archivo .env o en config.js`);
+      });
+      logger.error("El servidor no puede iniciar debido a configuración faltante. Saliendo...");
+      await new Promise((resolve) => setTimeout(resolve, 100)); // Pequeña pausa para asegurar que el log se escriba
+      process.exit(1);
+    }
+    logger.info("Configuración validada correctamente.");
 
-logger.info("Starting server...");
 
-process.on('uncaughtException', function(error) {
-    logger.error(`uncaughtException: ${error}`);
-});
+    await connectRedis();
 
-process.on('unhandledRejection', function(reason, promise) {
-    logger.error(`unhandledRejection: ${reason} --> from: ${JSON.stringify(promise)}`);
-});
 
-const configPropiedades = Object.entries(config);
+    const apiServer = express();
 
-const propiedadesFaltantes = configPropiedades.filter(([clave, valor]) => valor === undefined || valor === null || valor === ""); //Filtra aquellas claves que tienen como valores datos indefinidos, nulos o vacios
+    // Middleware
+    apiServer.use(express.json());
 
-if (propiedadesFaltantes.length > 0) {
+    // Routes
+    apiServer.use(whatsAppWebHookRoute);
+    apiServer.use(infoHealthRoute);
 
-  propiedadesFaltantes.forEach(([clave]) => {
-    logger.error(`La propiedad '${clave}' no está definida en el archivo .env o en config.js`);
-  });
+    // Handlers de errores globales
+    process.on('uncaughtException', function(error) {
+        logger.error(`uncaughtException: ${error}`);
+    });
+    process.on('unhandledRejection', function(reason, promise) {
+        logger.error(`unhandledRejection: ${reason}`);
+    });
 
-  await new Promise((resolve) => setTimeout(resolve, 100));
-  process.exit(1);
+
+    apiServer.listen(config.webPort, function () {
+      logger.info(`API Server listening on Port ${config.webPort} ...`);
+    });
+
+  } catch (error) {
+
+    console.error("Error fatal durante el arranque del servidor:", error);
+    if (logger) {
+      logger.error(`Error fatal durante el arranque del servidor: ${error}`);
+    }
+    process.exit(1);
+  }
 }
 
-await connectToMongo();
-
-apiServer.listen(config.webPort, function () {
-  logger.info(`API Server listening on Port ${config.webPort} ...`);
-});
+startServer();

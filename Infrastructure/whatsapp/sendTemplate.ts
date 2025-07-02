@@ -10,6 +10,7 @@ import axios from 'axios';
 import logger from '../logging/logger.js';
 
 import config from '../../config.js';
+import { UserRepository } from '../database/userRepository.js';
 
 
 interface IapiResponse {
@@ -44,6 +45,24 @@ interface IdataResponse {
   ]
 }
 
+function sanitizeParamText(text: String): String {
+  const MAX_TOTAL = 1024;
+  const FIXED_TEXT_LENGTH = 552; // <-- contado desde la plantilla
+  const MAX_PARAM_LENGTH = MAX_TOTAL - FIXED_TEXT_LENGTH;
+
+  let cleaned = text
+    .replace(/[\n\r\t]/g, " ")
+    .replace(/ {5,}/g, "    ")
+    .trim();
+
+  if (cleaned.length > MAX_PARAM_LENGTH) {
+    cleaned = cleaned.slice(0, MAX_PARAM_LENGTH - 3) + "...";
+    logger.warn(`El mensaje fue recortado para cumplir politicas de Meta!`);
+  }
+
+  return cleaned;
+}
+
 export default async function sendUserTemplate(template: string, userPhoneNumber: string): Promise<IapiResponse | IerrorResponse> {
   const options = {
     method: 'POST',
@@ -59,6 +78,13 @@ export default async function sendUserTemplate(template: string, userPhoneNumber
   logger.info(`Sanitized phone number: ${userPhoneNumberSanitized}`);
 
   let data = null;
+
+  let phishingMessage = await UserRepository.getInstance().retrieveUserReceivedMessage(userPhoneNumber);
+  if (phishingMessage) {
+    phishingMessage = sanitizeParamText(phishingMessage);
+  } else {
+    phishingMessage = "";
+  }
 
   switch (template) {
     case config.midFlowTemplateFlowName:
@@ -133,7 +159,7 @@ export default async function sendUserTemplate(template: string, userPhoneNumber
             {
           "type": "text",
           "parameter_name": "sus_message",
-          "text": "el mensaje sospechoso o lo que sea"
+          "text": `${phishingMessage}`
             }
           ]
         }

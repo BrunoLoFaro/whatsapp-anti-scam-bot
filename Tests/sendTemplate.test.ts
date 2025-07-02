@@ -1,21 +1,54 @@
-import sendUserTemplate from '../Infrastructure/whatsapp/sendTemplate';
+import { describe, test, beforeEach, jest, expect } from '@jest/globals';
+
+// 0) Mocka el repositorio de usuarios para que no invoque hGet real:
+jest.mock(
+  '../Infrastructure/database/userRepository.js',
+  () => {
+    const fakeRepo = {
+      retrieveUserReceivedMessage: jest.fn().mockResolvedValue('Hola' as never),
+      retrieveUserState: jest.fn().mockResolvedValue('GREETED' as never),
+      createUser: jest.fn(),
+      updateUser: jest.fn(),
+      deleteUser: jest.fn(),
+    };
+    return {
+      __esModule: true,
+      UserRepository: {
+        getInstance: () => fakeRepo
+      },
+      UserState: {
+        NEW: 'NEW',
+        GREETED: 'GREETED',
+        // …otros si los usas
+      }
+    };
+  }
+);
+
+// 1) MOCK axios …
+jest.mock('axios', () => ({ __esModule: true, default: { post: jest.fn() } }));
+// 2) MOCK config.js …
+jest.mock('../config.js', () => ({ __esModule: true, default: {
+  /* …tus props… */
+  redisUri: 'redis://localhost:6379'
+}}));
+// 3) MOCK logger.js …
+jest.mock('../Infrastructure/logging/logger.js', () => ({ __esModule: true, default: {
+  info: jest.fn(), error: jest.fn()
+}}));
+// 4) MOCK redis (solo createClient) …
+jest.mock('redis', () => ({ __esModule: true, createClient: jest.fn().mockReturnValue({
+  on: jest.fn(),
+  connect: jest.fn()
+})}));
+
+
+// --- 5) AHORA importas TODO usando extensiones “.js” ---
 import axios from 'axios';
-import config from '../config.js';
+import sendUserTemplate from '../Infrastructure/whatsapp/sendTemplate.js';
+import config         from '../config.js';
+import logger         from '../Infrastructure/logging/logger.js';
 
-import { describe, test, jest, beforeEach, expect } from '@jest/globals'
-
-jest.mock('axios');
-jest.mock('../Infrastructure/logging/logger.js', () => ({
-  info: jest.fn(),
-  error: jest.fn(),
-}));
-jest.mock('../config', () => ({
-  greetTemplateFlowName: 'fake_greet_template',
-  midFlowTemplateFlowName: 'fake_mid_flow_template',
-  terminateFlowTemplateFlowName: 'fake_terminate_template',
-  errorFlowTemplateFlowName: 'fake_error_template',
-  shareFlowTemplateFlowName: 'fake_share_template'
-}));
 
 const mockPost = axios.post as jest.MockedFunction<typeof axios.post>;
 

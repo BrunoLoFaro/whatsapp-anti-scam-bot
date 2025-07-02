@@ -4,6 +4,7 @@ dotenv.config({ path: '.env' });
 
 interface configType {
     webPort?: number,
+    redisUri?: string,
     wppAPIToken?: string,
     ownNumberID?: string,
     metaBaseUrl?: string,
@@ -24,6 +25,7 @@ interface configType {
 
 class Config implements configType{
     public webPort = process.env.PORT ? parseInt(process.env.PORT) : undefined;
+    public redisUri = process.env.REDIS_URI;
     public wppAPIToken = process.env.WHATSAPP_TOKEN;
     public ownNumberID = process.env.PHONE_NUMBER_ID;
     public metaBaseUrl = process.env.META_BASE_URL;
