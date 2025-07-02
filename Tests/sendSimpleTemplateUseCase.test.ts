@@ -1,12 +1,18 @@
 import sendTemplate from '../Application/usecases/sendSimpleTemplateUseCase.js';
 import sendUserTemplate from '../Infrastructure/whatsapp/sendTemplate.js';
 import { describe, test, jest, expect, beforeEach } from '@jest/globals';
+import config from '../config.js';
 
 jest.mock('../Infrastructure/whatsapp/sendTemplate');
 
 jest.mock('../Infrastructure/logging/logger', () => ({
     info: jest.fn(),
     error: jest.fn(),
+}));
+
+jest.mock('../config.js', () => ({
+  __esModule: true,
+  default: { redisUri: 'redis://localhost:6379' }
 }));
 
 

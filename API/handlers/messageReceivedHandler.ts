@@ -5,6 +5,7 @@ import sendTemplate from "../../Application/usecases/sendSimpleTemplateUseCase.j
 import { IUserTemplate } from "../../Application/usecases/sendSimpleTemplateUseCase.js";
 import config from "../../config.js";
 import sendUserReply, { IReply } from "../../Application/usecases/sendUserReplyUseCase.js";
+import { UserRepository, UserState } from "../../Infrastructure/database/userRepository.js";
 
 interface IMessage {
     from: string; // Número remitente (debe coincidir con wa_id)
@@ -48,20 +49,47 @@ export default async function handleIncomingMessage(message: IMessage): Promise<
     
     try {
 
-        if (textMessage.match(/hola/i)) {
-            userTemplateFlow.template = config.greetTemplateFlowName ?? "seguriamigo_user_error_flow";
-        } else {
+        const userState = await UserRepository.getInstance().retrieveUserState(message.from);
+        
+        logger.info(`EL ESTADO ES: ${userState}`);
 
-            if (isValidMessage(textMessage)){
-                reply.message = 'Aguarde mientras su mensaje es procesado...';
-                await sendUserReply(reply);
+        switch (userState) {
+            case null:
+                userTemplateFlow.template = config.greetTemplateFlowName ?? "seguriamigo_user_error_flow";
 
-               await analyzeScamAndRespond(messageReceived);
+                logger.info(`Usuario no encontrado: ${messageReceived.from} en la BD Redis, Procesando Creacion ...`); 
 
-                userTemplateFlow.template = config.midFlowTemplateFlowName ?? "seguriamigo_user_error_flow"; 
-            } else {
+                await UserRepository.getInstance().createUser({phoneNumber: messageReceived.from})
+                logger.info(`Creado usuario: ${messageReceived.from} en la BD Redis con Exito`);
+                
+                
+
+                await UserRepository.getInstance().updateUser({phoneNumber: messageReceived.from, state: UserState.GREETED});
+                logger.info(`Usuario: ${messageReceived.from} transiciono a estado ${UserState.GREETED} con Exito`);
+                break;
+            
+            case 'GREETED':
+                logger.info(`Usuario encontrado: ${message.from} en la BD Redis! con estado: ${userState}`);
+
+                if (isValidMessage(textMessage)){
+                    reply.message = 'Aguarde mientras su mensaje es procesado...';
+                    await sendUserReply(reply);
+                    await analyzeScamAndRespond(messageReceived);
+                    userTemplateFlow.template = config.midFlowTemplateFlowName ?? "seguriamigo_user_error_flow";
+
+                    await UserRepository.getInstance().updateUser({phoneNumber: message.from, state: UserState.MIDFLOW, receivedMessage: textMessage});                    
+                    logger.info(`Usuario: ${message.from} transiciono a estado MIDFLOW con Exito`);
+
+                } else {
+                    userTemplateFlow.template = config.errorFlowTemplateFlowName ?? "seguriamigo_user_error_flow"; 
+                }
+
+                break;
+            default:
                 userTemplateFlow.template = config.errorFlowTemplateFlowName ?? "seguriamigo_user_error_flow"; 
-            }
+                reply.message = 'Por favor elija una opcion mediante el pulsador de botones...';
+                await sendUserReply(reply);
+                break;
         }
 
         await sendTemplate(userTemplateFlow);
